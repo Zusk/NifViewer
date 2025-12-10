@@ -35,8 +35,6 @@ public sealed class NifReader
 
         // 6) Groups list
         var groupsInfo = NifGroupList.Read(_br);
-        if (!groupsInfo.Consumed)
-            Console.WriteLine("[NIF] GROUPS section not detected; continuing with zero groups.");
 
         // 7) Build context
         _ctx = new NifContext

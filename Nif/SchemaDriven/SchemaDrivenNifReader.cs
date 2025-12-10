@@ -27,9 +27,7 @@ public sealed class SchemaDrivenNifReader
 
         // String palette (and optional groups) are present in most NIF versions and we need to advance past them
         NifStringPalette.ReadStrings(br);
-        var groupsInfo = NifGroupList.Read(br);
-        if (!groupsInfo.Consumed)
-            Console.WriteLine("[NIF] GROUPS section not detected; continuing with zero groups.");
+        NifGroupList.Read(br);
 
         var file = new NifFile { Header = header };
 
