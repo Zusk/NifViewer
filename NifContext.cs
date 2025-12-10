@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 public sealed class NifContext
 {
     public string HeaderString { get; set; } = string.Empty;
@@ -14,6 +15,9 @@ public sealed class NifContext
     /// <summary>Block index → type index into BlockTypes.</summary>
     public int[] BlockTypeIndex { get; set; } = Array.Empty<int>();
 
+    /// <summary>Global string palette read from the file (matches niflib behaviour).</summary>
+    public List<string> Strings { get; set; } = new();
+
     /// <summary>All instantiated NiObject blocks, same order as in file.</summary>
     public NiObject[] Blocks { get; set; } = Array.Empty<NiObject>();
 
@@ -23,5 +27,16 @@ public sealed class NifContext
     {
         if (index < 0 || index >= Blocks.Length) return null;
         return Blocks[index] as T;
+    }
+
+    /// <summary>
+    /// Returns a string from the palette or an empty string if the index is out of range.
+    /// </summary>
+    public string GetString(int index)
+    {
+        if (index < 0 || index >= Strings.Count)
+            return string.Empty;
+
+        return Strings[index];
     }
 }
