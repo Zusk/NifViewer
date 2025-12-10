@@ -41,7 +41,8 @@ public sealed class NifReader
             NumBlocks = _header.NumBlocks,
             BlockTypes = _blockTypes,
             BlockTypeIndex = _blockTypeIndex,
-            Blocks = new NiObject[_header.NumBlocks]
+            Blocks = new NiObject[_header.NumBlocks],
+            Strings = _strings
         };
     }
 
