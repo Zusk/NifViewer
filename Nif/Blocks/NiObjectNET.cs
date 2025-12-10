@@ -15,11 +15,13 @@ public abstract class NiObjectNET : NiObject
         base.Read(br, ctx);
 
         // ---- Name ----
-        // niflib reads the name as a string palette index for 10.0+ files
-        // (including Civ4 20.0.0.4). Keep the same behaviour here. When the
-        // palette is missing (older versions), fall back to an inline sized string
-        // to avoid desyncing the stream.
-        if (ctx.Strings.Count > 0)
+        // For 10.0+ files, names are always stored as indices into the
+        // string palette, even when the palette is empty (value is usually
+        // -1). Both pyffi and nifparse follow this rule. Older formats store
+        // an inline sized string instead. Using the palette path for modern
+        // files avoids desyncing the stream when NumStrings == 0.
+        bool usesStringPalette = ctx.Version >= 0x0A000000; // 10.0.0.0
+        if (usesStringPalette)
         {
             int nameIndex = br.ReadInt32();
             Name = ctx.GetString(nameIndex);
