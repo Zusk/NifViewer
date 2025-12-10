@@ -3,7 +3,8 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
-using System.Collections.Generic;
+using NifViewer.Nif;
+using NifViewer.Nif.ModelBuilder;
 
 class CubeWindow : GameWindow
 {
@@ -85,10 +86,11 @@ class CubeWindow : GameWindow
         GL.ClearColor(0.1f, 0.1f, 0.1f, 1f);
 
         NIFLoader.Debug = true;
-        List<NiObject> nifBlocks = NIFLoader.Load("Content/Svart_Monk.nif");
+        var nifFile = NIFLoader.Load("Content/Svart_Monk.nif");
+        // Binary .nif -> Civ4 node objects -> MeshBuilder -> Mesh -> Model
+        var builtModel = NIFLoader.BuildModelFromNIF(nifFile);
 
-
-        Console.WriteLine($"Loaded {nifBlocks.Count} NIF blocks.");
+        Console.WriteLine($"Loaded {nifFile.Blocks.Length} NIF blocks.");
 
         // Choose model: honor explicit flags.
         // - If --cube was requested (and not overridden) show the debug cube.
@@ -102,13 +104,15 @@ class CubeWindow : GameWindow
         }
         else if (_forceModel && !_forceCube)
         {
-            _model = BuildModel(nifBlocks);
-            if (_model == null)
+            _model = builtModel;
+            if (_model.Meshes.Count == 0)
                 Console.WriteLine("[WARN] --model requested but no usable meshes were found; rendering an empty scene.");
         }
         else
         {
-            _model = NifModelBuilder.Build(nifBlocks, debug: true);
+            _model = builtModel.Meshes.Count > 0
+                ? builtModel
+                : PrimitiveFactory.CreateTestCubeModel();
         }
 
         // ------------------------------------------------------
@@ -172,72 +176,6 @@ class CubeWindow : GameWindow
             _model.Dispose();
     }
 
-    private Model? BuildModel(List<NiObject> nifBlocks)
-    {
-        var model = new Model();
-
-        int count = nifBlocks.Count;
-        var dataByIndex = new NiTriShapeData[count];
-        for (int i = 0; i < count; i++)
-        {
-            if (nifBlocks[i] is NiTriShapeData data)
-                dataByIndex[i] = data;
-        }
-
-        Texture? sharedTexture = null;
-
-        for (int i = 0; i < count; i++)
-        {
-            if (nifBlocks[i] is not NiTriShape shape)
-                continue;
-
-            int dataIndex = shape.DataIndex;
-            if ((uint)dataIndex >= dataByIndex.Length)
-                continue;
-
-            var data = dataByIndex[dataIndex];
-            if (data == null || data.Vertices.Length == 0 || data.Indices.Length == 0)
-                continue;
-
-            int vCount = data.Vertices.Length;
-            float[] packed = new float[vCount * 8];
-
-            var normals = data.HasNormals ? data.Normals : Array.Empty<Vector3>();
-            Vector2[] uvs = data.GetPrimaryUVs() ?? Array.Empty<Vector2>();
-            bool hasUVs = uvs.Length == vCount;
-
-            for (int v = 0, dst = 0; v < vCount; v++)
-            {
-                var pos = data.Vertices[v];
-                var normal = v < normals.Length ? normals[v] : Vector3.Zero;
-                var uv = hasUVs ? uvs[v] : Vector2.Zero;
-
-                packed[dst++] = pos.X;
-                packed[dst++] = pos.Y;
-                packed[dst++] = pos.Z;
-                packed[dst++] = normal.X;
-                packed[dst++] = normal.Y;
-                packed[dst++] = normal.Z;
-                packed[dst++] = uv.X;
-                packed[dst++] = uv.Y;
-            }
-
-            var indices16 = data.Indices;
-            var indices = new uint[indices16.Length];
-            for (int j = 0; j < indices16.Length; j++)
-                indices[j] = indices16[j];
-
-            var mesh = new Mesh(packed, indices);
-            var material = new Material();
-            material.Texture = sharedTexture ??= Texture.Load("Content/texture.dds", "Content/texture.png");
-            model.AddMesh(mesh, material);
-        }
-
-        if (model.Meshes.Count == 0)
-            return null;
-
-        return model;
-    }
 
     // -----------------------------
     // SHADERS

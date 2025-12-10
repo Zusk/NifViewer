@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using NifViewer.Nif;
 
 /// <summary>
 /// Reads the block type dictionary for Civ4-style NIFs.

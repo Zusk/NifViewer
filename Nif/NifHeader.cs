@@ -1,107 +1,71 @@
 using System;
 using System.IO;
-using System.Text;
+
+namespace NifViewer.Nif;
 
 /// <summary>
-/// Parsed header for a Civ4-style Gamebryo 20.0.0.4 NIF.
-/// No heuristics, strictly matches Civ4 layout.
+/// Lightweight Civ4 NIF header reader. It captures the block list and type dictionary
+/// exactly as stored in the file without attempting to interpret additional metadata.
 /// </summary>
 public sealed class NifHeader
 {
-    public string HeaderString { get; }
-    public uint Version { get; }
-    public uint UserVersion { get; }
-    public byte EndianType { get; }
-    public uint NumBlocks { get; }
-    public ushort NumTypes { get; }
+    public string HeaderString { get; private set; } = string.Empty;
+    public string VersionString { get; private set; } = string.Empty;
+    public uint Version { get; private set; }
+    public byte Endian { get; private set; }
+    public uint UserVersion { get; private set; }
+    public uint BlockCount { get; private set; }
+    public ushort BlockTypeCount { get; private set; }
+    public string[] BlockTypes { get; private set; } = Array.Empty<string>();
+    public string[] Blocks { get; private set; } = Array.Empty<string>();
 
-    /// <summary>Length in bytes of the first type name in the type dictionary.</summary>
-    public ushort FirstTypeNameLength { get; }
+    // Backwards-compatibility members for legacy readers.
+    public byte EndianType => Endian;
+    public uint NumBlocks => BlockCount;
+    public ushort NumTypes => BlockTypeCount;
 
-    private NifHeader(
-        string headerString,
-        uint version,
-        uint userVersion,
-        byte endianType,
-        uint numBlocks,
-        ushort numTypes,
-        ushort firstTypeNameLength)
+    public void Read(BinaryReader reader)
     {
-        HeaderString = headerString;
-        Version = version;
-        UserVersion = userVersion;
-        EndianType = endianType;
-        NumBlocks = numBlocks;
-        NumTypes = numTypes;
-        FirstTypeNameLength = firstTypeNameLength;
-    }
+        HeaderString = reader.ReadNullTerminatedString();
 
-    /// <summary>
-    /// Reads a Civ4-style NIF header.
-    /// Layout:
-    ///   char[] headerString (C-string terminated by '\n' or '\0')
-    ///   uint32 version
-    ///   uint32 userVersion
-    ///   uint8  endianType
-    ///   uint32 numBlocks
-    ///   uint16 numTypes
-    ///   uint16 firstTypeNameLength
-    ///   uint16 padding (0)
-    /// </summary>
-    public static NifHeader Read(BinaryReader br)
-    {
-        string header = ReadHeaderString(br);
+        // Civ4 stores the version as 4 separate bytes (20.0.0.4)
+        byte b0 = reader.ReadByte();
+        byte b1 = reader.ReadByte();
+        byte b2 = reader.ReadByte();
+        byte b3 = reader.ReadByte();
 
-        uint version = br.ReadUInt32();
-        uint userVersion = br.ReadUInt32();
+        VersionString = string.Join('.', b0, b1, b2, b3);
+        Version = (uint)((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
 
-        // Civ4 NIFs always include an endian byte (0 or 1).
-        byte endianType = br.ReadByte();
+        Endian = reader.ReadByte();
+        UserVersion = reader.ReadUInt32();
+        BlockCount = reader.ReadUInt32();
+        BlockTypeCount = reader.ReadUInt16();
 
-        uint numBlocks = br.ReadUInt32();
-        ushort numTypes = br.ReadUInt16();
-        ushort firstTypeLen = br.ReadUInt16();
-        ushort padding = br.ReadUInt16(); // should be 0
+        BlockTypes = new string[BlockTypeCount];
+        for (int i = 0; i < BlockTypeCount; i++)
+            BlockTypes[i] = reader.ReadStringWithLength();
 
-        Console.WriteLine("-------------------------------------------------");
-        Console.WriteLine("[NIF] HEADER");
-        Console.WriteLine("-------------------------------------------------");
-        Console.WriteLine(header);
-        Console.WriteLine($"Version:          0x{version:X8}");
-        Console.WriteLine($"UserVersion:      {userVersion}");
-        Console.WriteLine($"EndianType:       {endianType}");
-        Console.WriteLine($"NumBlocks:        {numBlocks}");
-        Console.WriteLine($"NumTypes:         {numTypes}");
-        Console.WriteLine($"FirstTypeNameLen: {firstTypeLen}");
-        Console.WriteLine($"Padding:          0x{padding:X4}");
-        Console.WriteLine();
-
-        return new NifHeader(
-            header,
-            version,
-            userVersion,
-            endianType,
-            numBlocks,
-            numTypes,
-            firstTypeLen);
-    }
-
-    private static string ReadHeaderString(BinaryReader br)
-    {
-        var bytes = new System.Collections.Generic.List<byte>();
-        while (true)
+        Blocks = new string[BlockCount];
+        for (int i = 0; i < BlockCount; i++)
         {
-            byte b = br.ReadByte();
-            if (b == 0x0A || b == 0x00) // newline or null terminator
-                break;
-            bytes.Add(b);
+            var typeIndex = reader.ReadUInt16();
+            Blocks[i] = typeIndex < BlockTypes.Length ? BlockTypes[typeIndex] : "NiUnknown";
         }
 
-        // Trim trailing CR if present
-        if (bytes.Count > 0 && bytes[^1] == 0x0D)
-            bytes.RemoveAt(bytes.Count - 1);
+        // Group metadata appears here in Civ4 files; it is rarely present so we skip it.
+        uint groupCount = reader.ReadUInt32();
+        if (groupCount > 0)
+        {
+            // Skip group indices to keep the reader aligned for the block stream.
+            reader.ReadBytes((int)(groupCount * sizeof(uint)));
+        }
+    }
 
-        return Encoding.ASCII.GetString(bytes.ToArray());
+    public static NifHeader Read(BinaryReader reader)
+    {
+        var header = new NifHeader();
+        header.Read(reader);
+        return header;
     }
 }
-

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using NifViewer.Nif;
 
 /// <summary>
 /// Reads the block type index table for Civ4 NIFs.

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NifViewer.Nif;
 
 /// <summary>
 /// Schema-driven NIF reader that uses nif.xml to discover block layout at runtime.
