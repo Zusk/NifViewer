@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<niftoolsxml>
+  <compound name="Vector3">
+    <field name="x" type="float" />
+    <field name="y" type="float" />
+    <field name="z" type="float" />
+  </compound>
+  <compound name="TexCoord">
+    <field name="u" type="float" />
+    <field name="v" type="float" />
+  </compound>
+  <compound name="Triangle">
+    <field name="v1" type="ushort" />
+    <field name="v2" type="ushort" />
+    <field name="v3" type="ushort" />
+  </compound>
+
+  <niobject name="NiObject" />
+  <niobject name="NiObjectNET" inherit="NiObject">
+    <field name="name" type="string" />
+  </niobject>
+  <niobject name="NiAVObject" inherit="NiObjectNET">
+    <field name="flags" type="ushort" />
+    <field name="translation" type="Vector3" />
+    <field name="scale" type="float" />
+  </niobject>
+  <niobject name="NiNode" inherit="NiAVObject">
+    <field name="numChildren" type="uint" />
+    <field name="children" type="Ref" arr1="numChildren" />
+  </niobject>
+  <niobject name="NiTriShape" inherit="NiAVObject">
+    <field name="data" type="Ref" />
+    <field name="numProperties" type="ushort" />
+    <field name="properties" type="Ref" arr1="numProperties" />
+  </niobject>
+  <niobject name="NiTriShapeData" inherit="NiObject">
+    <field name="numVertices" type="ushort" />
+    <field name="vertices" type="Vector3" arr1="numVertices" />
+    <field name="hasNormals" type="bool" />
+    <field name="normals" type="Vector3" arr1="numVertices" cond="hasNormals" />
+    <field name="numTriangles" type="ushort" />
+    <field name="triangles" type="Triangle" arr1="numTriangles" />
+    <field name="hasUV" type="bool" />
+    <field name="uvs" type="TexCoord" arr1="numVertices" cond="hasUV" />
+  </niobject>
+  <niobject name="NiMaterialProperty" inherit="NiObjectNET">
+    <field name="ambient" type="Vector3" />
+    <field name="diffuse" type="Vector3" />
+    <field name="specular" type="Vector3" />
+  </niobject>
+  <niobject name="NiTexturingProperty" inherit="NiObjectNET">
+    <field name="applyMode" type="uint" />
+    <field name="baseTexture" type="Ref" />
+  </niobject>
+  <niobject name="NiSourceTexture" inherit="NiObjectNET">
+    <field name="fileName" type="string" />
+    <field name="pixelLayout" type="uint" />
+  </niobject>
+</niftoolsxml>

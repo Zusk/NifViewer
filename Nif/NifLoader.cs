@@ -23,6 +23,18 @@ public static class NIFLoader
         return blocks;
     }
 
+    /// <summary>
+    /// Schema-driven loader that uses nif.xml at runtime to read the file without
+    /// hardcoded block layouts. Returns a generic NifFile structure.
+    /// </summary>
+    public static NifFile LoadWithSchema(string path, string? schemaPath = null)
+    {
+        schemaPath ??= Path.Combine(AppContext.BaseDirectory, "Content", "nif.xml");
+        var schema = NifSchema.Load(schemaPath);
+        var reader = new SchemaDrivenNifReader(schema);
+        return reader.Read(path);
+    }
+
     // ===================================================================
     // BUILD MODEL FROM BLOCKS  (Civ4 NiTriShape → Mesh → Model)
     // ===================================================================
