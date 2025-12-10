@@ -15,6 +15,7 @@ public sealed class NifReader
     private readonly string[] _blockTypes;
     private readonly short[] _blockTypeIndex;
     private readonly uint[] _blockOffsets;
+    private readonly List<string> _strings;
 
     public NifReader(BinaryReader br)
     {
@@ -32,10 +33,13 @@ public sealed class NifReader
         // 4) Block type index table
         _blockTypeIndex = NifBlockIndexTable.ReadBlockTypeIndices(_br, _header, _blockTypes);
 
-        // 5) Block offsets table
+        // 5) String palette (names referenced by blocks)
+        _strings = NifStringPalette.ReadStrings(_br);
+
+        // 6) Block offsets table
         _blockOffsets = NifBlockOffsets.ReadBlockOffsets(_br, _header);
 
-        // 6) Build context
+        // 7) Build context
         _ctx = new NifContext
         {
             HeaderString = _header.HeaderString,
@@ -45,7 +49,8 @@ public sealed class NifReader
             NumBlocks = _header.NumBlocks,
             BlockTypes = _blockTypes,
             BlockTypeIndex = _blockTypeIndex,
-            Blocks = new NiObject[_header.NumBlocks]
+            Blocks = new NiObject[_header.NumBlocks],
+            Strings = _strings
         };
     }
 
@@ -64,7 +69,6 @@ public sealed class NifReader
 
             if (off == 0xFFFFFFFFu)
             {
-                // Null block
                 string nullType = (typeIndex >= 0 && typeIndex < _blockTypes.Length)
                     ? _blockTypes[typeIndex]
                     : "NiUnknown";
@@ -88,7 +92,7 @@ public sealed class NifReader
             long blockPos = off;
             if (blockPos < 0 || blockPos >= _br.BaseStream.Length)
             {
-                Console.WriteLine($"[WARN] Block {i} offset {blockPos} is past EOF; creating empty {typeName}.");
+                Console.WriteLine($"[WARN] Block {i} position {blockPos} is past EOF; creating empty {typeName}.");
                 var empty = NifRegistry.Create(typeName, i);
                 _ctx.Blocks[i] = empty;
                 blocks.Add(empty);
@@ -96,6 +100,7 @@ public sealed class NifReader
             }
 
             Console.WriteLine($"[NIF] Reading block {i}: {typeName} @ {blockPos}");
+
             _br.BaseStream.Seek(blockPos, SeekOrigin.Begin);
 
             var obj = NifRegistry.Create(typeName, i);
