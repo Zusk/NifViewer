@@ -16,9 +16,6 @@ public sealed class NifContext
     /// <summary>Block index → type index into BlockTypes.</summary>
     public short[] BlockTypeIndex { get; set; } = Array.Empty<short>();
 
-    /// <summary>Absolute file offsets for each block.</summary>
-    public uint[] BlockOffsets { get; set; } = Array.Empty<uint>();
-
     /// <summary>All instantiated NiObject blocks, same order as in file.</summary>
     public NiObject[] Blocks { get; set; } = Array.Empty<NiObject>();
     public List<string> Strings = new List<string>();

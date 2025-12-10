@@ -11,7 +11,6 @@ public sealed class NifReader
     private readonly BinaryReader _br;
     private readonly NifHeader _header;
     private readonly NifContext _ctx;
-    private readonly uint[] _blockOffsets;
 
     private readonly string[] _blockTypes;
     private readonly short[] _blockTypeIndex;
@@ -36,10 +35,7 @@ public sealed class NifReader
         // 5) String palette
         _strings = NifStringPalette.ReadStrings(_br);
 
-        // 6) Block offsets (absolute positions of each block)
-        _blockOffsets = NifBlockOffsets.ReadBlockOffsets(_br, _header);
-
-        // 7) Build context
+        // 6) Build context
         _ctx = new NifContext
         {
             HeaderString = _header.HeaderString,
@@ -50,7 +46,6 @@ public sealed class NifReader
             BlockTypes = _blockTypes,
             BlockTypeIndex = _blockTypeIndex,
             Blocks = new NiObject[_header.NumBlocks],
-            BlockOffsets = _blockOffsets,
             Strings = _strings
         };
     }
@@ -77,23 +72,6 @@ public sealed class NifReader
                 : "NiUnknown";
 
             long blockPos = _br.BaseStream.Position;
-            if (i < _blockOffsets.Length && _blockOffsets[i] != blockPos)
-            {
-                long desired = _blockOffsets[i];
-
-                if (desired >= _br.BaseStream.Length)
-                {
-                    Console.WriteLine($"[WARN] Block {i} offset {desired} is past EOF; creating empty {typeName}.");
-                    var emptyPastEof = NifRegistry.Create(typeName, i);
-                    _ctx.Blocks[i] = emptyPastEof;
-                    blocks.Add(emptyPastEof);
-                    continue;
-                }
-
-                Console.WriteLine($"[NIF] Seeking to block {i} offset {desired} (was at {blockPos}).");
-                _br.BaseStream.Position = desired;
-                blockPos = desired;
-            }
             if (blockPos >= _br.BaseStream.Length)
             {
                 Console.WriteLine($"[WARN] Block {i} position {blockPos} is past EOF; creating empty {typeName}.");
