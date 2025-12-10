@@ -14,6 +14,7 @@ public sealed class NifReader
 
     private readonly string[] _blockTypes;
     private readonly short[] _blockTypeIndex;
+    private readonly List<string> _strings;
 
     public NifReader(BinaryReader br)
     {
@@ -31,7 +32,10 @@ public sealed class NifReader
         // 4) Block type index table
         _blockTypeIndex = NifBlockIndexTable.ReadBlockTypeIndices(_br, _header, _blockTypes);
 
-        // 5) Build context
+        // 5) String palette
+        _strings = NifStringPalette.ReadStrings(_br);
+
+        // 6) Build context
         _ctx = new NifContext
         {
             HeaderString = _header.HeaderString,
