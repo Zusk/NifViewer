@@ -13,7 +13,7 @@ public sealed class NifReader
     private readonly NifContext _ctx;
 
     private readonly string[] _blockTypes;
-    private readonly short[] _blockTypeIndex;
+    private readonly int[] _blockTypeIndex;
     private readonly List<string> _strings;
 
     public NifReader(BinaryReader br)
@@ -60,7 +60,7 @@ public sealed class NifReader
 
         for (int i = 0; i < numBlocks; i++)
         {
-            short typeIndex = _blockTypeIndex[i];
+            int typeIndex = _blockTypeIndex[i];
 
             if (typeIndex < 0 || typeIndex >= _blockTypes.Length)
             {
