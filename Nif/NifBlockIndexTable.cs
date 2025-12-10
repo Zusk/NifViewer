@@ -8,18 +8,18 @@ using System.IO;
 /// </summary>
 public static class NifBlockIndexTable
 {
-    public static short[] ReadBlockTypeIndices(BinaryReader br, NifHeader header, string[] blockTypes)
+    public static int[] ReadBlockTypeIndices(BinaryReader br, NifHeader header, string[] blockTypes)
     {
         uint numBlocks = header.NumBlocks;
-        short[] indices = new short[numBlocks];
+        int[] indices = new int[numBlocks];
 
         Console.WriteLine("[NIF] BLOCK TYPE INDEX TABLE");
         Console.WriteLine($"NumBlocks = {numBlocks}");
 
         for (int i = 0; i < numBlocks; i++)
         {
-            ushort raw = br.ReadUInt16();
-            short idx = (short)raw;
+            // Civ4 NIFs store block type indices as uint32 values.
+            int idx = br.ReadInt32();
             indices[i] = idx;
 
             string typeName = (idx >= 0 && idx < blockTypes.Length)
