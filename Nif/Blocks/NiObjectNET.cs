@@ -6,7 +6,7 @@ using System.IO;
 /// </summary>
 public abstract class NiObjectNET : NiObject
 {
-    public int NameIndex { get; protected set; } = -1;
+    public string Name { get; protected set; } = string.Empty;
     public int[] ExtraDataIndices { get; private set; } = Array.Empty<int>();
     public int ControllerIndex { get; private set; } = -1;
 
@@ -14,8 +14,8 @@ public abstract class NiObjectNET : NiObject
     {
         base.Read(br, ctx);
 
-        // ---- Name Index ----
-        NameIndex = br.ReadInt32();
+        // ---- Name ----
+        Name = NifString.ReadSizedString(br);
 
         // ---- Extra Data ----
         ushort extraCount = br.ReadUInt16();

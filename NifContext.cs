@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-
 public sealed class NifContext
 {
     public string HeaderString { get; set; } = string.Empty;
@@ -18,8 +16,6 @@ public sealed class NifContext
 
     /// <summary>All instantiated NiObject blocks, same order as in file.</summary>
     public NiObject[] Blocks { get; set; } = Array.Empty<NiObject>();
-    public List<string> Strings = new List<string>();
-    public List<int> StringIndices = new List<int>();
 
 
     /// <summary>Helper: resolve a block by index with type safety.</summary>

@@ -18,8 +18,9 @@ public static class NifBlockIndexTable
 
         for (int i = 0; i < numBlocks; i++)
         {
-            // Civ4 NIFs store block type indices as uint32 values.
-            int idx = br.ReadInt32();
+            // The NIF header stores the indices as 16-bit values that point
+            // into the type dictionary. Niflib follows the same layout.
+            int idx = br.ReadUInt16();
             indices[i] = idx;
 
             string typeName = (idx >= 0 && idx < blockTypes.Length)
