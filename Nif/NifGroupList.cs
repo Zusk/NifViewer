@@ -6,9 +6,28 @@ using System.IO;
 /// </summary>
 public static class NifGroupList
 {
-    public static (uint NumGroups, uint[] Groups) Read(BinaryReader br)
+    public static (uint NumGroups, uint[] Groups, bool Consumed) Read(BinaryReader br)
     {
+        long startPos = br.BaseStream.Position;
+        long bytesRemaining = br.BaseStream.Length - startPos;
+
+        if (bytesRemaining < sizeof(uint))
+        {
+            Console.WriteLine($"[NIF] GROUPS not present at 0x{startPos:X}; no bytes left for count. Defaulting to zero groups.");
+            return (0, Array.Empty<uint>(), false);
+        }
+
         uint numGroups = br.ReadUInt32();
+        long bytesAfterCount = br.BaseStream.Length - br.BaseStream.Position;
+        long bytesRequired = (long)numGroups * sizeof(uint);
+
+        if (numGroups > int.MaxValue || bytesRequired > bytesAfterCount)
+        {
+            Console.WriteLine($"[NIF] GROUPS count {numGroups} is invalid for remaining {bytesAfterCount} bytes. Rewinding and skipping groups.");
+            br.BaseStream.Position = startPos;
+            return (0, Array.Empty<uint>(), false);
+        }
+
         var groups = new uint[numGroups];
 
         Console.WriteLine("[NIF] GROUPS");
@@ -21,6 +40,6 @@ public static class NifGroupList
         }
 
         Console.WriteLine();
-        return (numGroups, groups);
+        return (numGroups, groups, true);
     }
 }
