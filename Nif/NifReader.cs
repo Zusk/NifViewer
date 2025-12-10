@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using NifViewer.Nif;
 
 /// <summary>
 /// Low-level Civ4 NIF reader. Reads header, type dict, block index,

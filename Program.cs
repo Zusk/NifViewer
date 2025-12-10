@@ -37,10 +37,10 @@ class Program
             Console.WriteLine($"Test loading: {path}");
             try
             {
-                var blocks = NIFLoader.Load(path);
-                Console.WriteLine($"Loaded {blocks.Count} blocks.");
-                for (int i = 0; i < Math.Min(10, blocks.Count); i++)
-                    Console.WriteLine($"[{i}] {blocks[i].TypeName}");
+                var file = NIFLoader.Load(path);
+                Console.WriteLine($"Loaded {file.Blocks.Length} blocks.");
+                for (int i = 0; i < Math.Min(10, file.Blocks.Length); i++)
+                    Console.WriteLine($"[{i}] {file.Blocks[i].TypeName}");
             }
             catch (Exception ex)
             {

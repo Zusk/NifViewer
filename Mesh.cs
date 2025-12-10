@@ -1,7 +1,13 @@
+using System;
 using OpenTK.Graphics.OpenGL4;
 
 public class Mesh
 {
+    public float[] Positions { get; private set; } = Array.Empty<float>();
+    public float[] Normals { get; private set; } = Array.Empty<float>();
+    public float[] UVs { get; private set; } = Array.Empty<float>();
+    public uint[] RawIndices { get; private set; } = Array.Empty<uint>();
+
     public int VAO { get; private set; }
     public int VBO { get; private set; }
     public int EBO { get; private set; }
@@ -11,6 +17,7 @@ public class Mesh
     // vertices must contain: position (3) + normal (3) + uv (2) = 8 floats per vertex
     public Mesh(float[] vertices, uint[] indices)
     {
+        RawIndices = indices;
         IndexCount = indices.Length;
 
         VAO = GL.GenVertexArray();
@@ -51,6 +58,52 @@ public class Mesh
             false, stride, 6 * sizeof(float));
 
         GL.BindVertexArray(0);
+    }
+
+    /// <summary>
+    /// Construct a mesh from separate attribute streams produced by MeshBuilder.
+    /// The data is interleaved into the format expected by the renderer while also
+    /// keeping the raw arrays for any future CPU-side processing.
+    /// </summary>
+    public Mesh(float[] positions, float[] normals, float[] uvs, uint[] indices)
+        : this(Interleave(positions, normals, uvs), indices)
+    {
+        Positions = positions;
+        Normals = normals;
+        UVs = uvs;
+        RawIndices = indices;
+    }
+
+    private static float[] Interleave(float[] positions, float[] normals, float[] uvs)
+    {
+        int vertexCount = positions.Length / 3;
+        float[] interleaved = new float[vertexCount * 8];
+
+        for (int i = 0; i < vertexCount; i++)
+        {
+            int posOffset = i * 3;
+            int uvOffset = i * 2;
+            int dst = i * 8;
+
+            interleaved[dst] = positions[posOffset];
+            interleaved[dst + 1] = positions[posOffset + 1];
+            interleaved[dst + 2] = positions[posOffset + 2];
+
+            if (normals.Length >= posOffset + 3)
+            {
+                interleaved[dst + 3] = normals[posOffset];
+                interleaved[dst + 4] = normals[posOffset + 1];
+                interleaved[dst + 5] = normals[posOffset + 2];
+            }
+
+            if (uvs.Length >= uvOffset + 2)
+            {
+                interleaved[dst + 6] = uvs[uvOffset];
+                interleaved[dst + 7] = uvs[uvOffset + 1];
+            }
+        }
+
+        return interleaved;
     }
 
     public void Render()
