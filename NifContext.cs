@@ -9,6 +9,8 @@ public sealed class NifContext
 
     public uint NumBlocks { get; set; }
 
+    public uint NumGroups { get; set; }
+
     /// <summary>Index → type name (e.g. 0 → "NiNode").</summary>
     public string[] BlockTypes { get; set; } = Array.Empty<string>();
 
@@ -17,6 +19,9 @@ public sealed class NifContext
 
     /// <summary>Global string palette read from the file (matches niflib behaviour).</summary>
     public List<string> Strings { get; set; } = new();
+
+    /// <summary>Additional grouping information stored in the header.</summary>
+    public uint[] Groups { get; set; } = Array.Empty<uint>();
 
     /// <summary>All instantiated NiObject blocks, same order as in file.</summary>
     public NiObject[] Blocks { get; set; } = Array.Empty<NiObject>();

@@ -33,7 +33,10 @@ public sealed class NifReader
         // 5) String palette (niflib reads this before any block data)
         var strings = NifStringPalette.ReadStrings(_br);
 
-        // 6) Build context
+        // 6) Groups list
+        var groupsInfo = NifGroupList.Read(_br);
+
+        // 7) Build context
         _ctx = new NifContext
         {
             HeaderString = _header.HeaderString,
@@ -41,9 +44,11 @@ public sealed class NifReader
             UserVersion = _header.UserVersion,
             EndianType = _header.EndianType,
             NumBlocks = _header.NumBlocks,
+            NumGroups = groupsInfo.NumGroups,
             BlockTypes = _blockTypes,
             BlockTypeIndex = _blockTypeIndex,
             Strings = strings,
+            Groups = groupsInfo.Groups,
             Blocks = new NiObject[_header.NumBlocks]
         };
     }

@@ -25,8 +25,9 @@ public sealed class SchemaDrivenNifReader
         NifTypeDictionary.AlignTo4Bytes(br);
         var typeIndex = NifBlockIndexTable.ReadBlockTypeIndices(br, header, typeNames);
 
-        // String palette is present in most NIF versions and we need to advance past it
-        var _ = NifStringPalette.ReadStrings(br);
+        // String palette (and optional groups) are present in most NIF versions and we need to advance past them
+        NifStringPalette.ReadStrings(br);
+        NifGroupList.Read(br);
 
         var file = new NifFile { Header = header };
 
