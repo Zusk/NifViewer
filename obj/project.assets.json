@@ -611,11 +611,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/zusk/NifViewer/NifViewer.csproj",
+      "projectUniqueName": "/home/zusk/NifViewer/NifViewer/NifViewer.csproj",
       "projectName": "NifViewer",
-      "projectPath": "/home/zusk/NifViewer/NifViewer.csproj",
+      "projectPath": "/home/zusk/NifViewer/NifViewer/NifViewer.csproj",
       "packagesPath": "/home/zusk/.nuget/packages/",
-      "outputPath": "/home/zusk/NifViewer/obj/",
+      "outputPath": "/home/zusk/NifViewer/NifViewer/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/zusk/.nuget/NuGet/NuGet.Config"

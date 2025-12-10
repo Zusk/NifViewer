@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YFsySSlCkbKEH3nxQSJFcntjNGaOawNHhuKwWaABQ7s6AeImkDnkZgv4Ljem0pjPYAJzDnd8qN+pltVKcrb1mg==",
+  "dgSpecHash": "08czZ+QrnEt4tBxlwFL4s6VEk/9Cn+WlSyHaWX4VUF4C0S/jDnBJ37zjE89ixi/VX0uDGIAAHm+SggnmfpC3Zw==",
   "success": true,
-  "projectFilePath": "/home/zusk/NifViewer/NifViewer.csproj",
+  "projectFilePath": "/home/zusk/NifViewer/NifViewer/NifViewer.csproj",
   "expectedPackageFiles": [
     "/home/zusk/.nuget/packages/imgui.net/1.91.6.1/imgui.net.1.91.6.1.nupkg.sha512",
     "/home/zusk/.nuget/packages/opentk/4.9.4/opentk.4.9.4.nupkg.sha512",
