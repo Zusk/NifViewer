@@ -7,27 +7,23 @@ class Program
     public static void Main(string[] args)
     {
         // Schema-driven test mode: use nif.xml to parse everything dynamically
-        if (args.Length > 0 && args[0] == "--schema-load")
-        {
-            string path = args.Length > 1 ? args[1] : "Content/Svart_Monk.nif";
-            string schemaPath = args.Length > 2 ? args[2] : Path.Combine(AppContext.BaseDirectory, "Content", "nif.xml");
-            Console.WriteLine($"[INFO] Schema-driven load requested: {path} (schema={schemaPath})");
-            Console.WriteLine("[WARN] Model/NIF loader is not included in this build. Re-enable or implement the loader to use this feature.");
-            return;
-        }
+        //if (args.Length > 0 && args[0] == "--schema-load")
+        //{
+        //    string path = args.Length > 1 ? args[1] : "Content/Svart_Monk.nif";
+        //    string schemaPath = args.Length > 2 ? args[2] : Path.Combine(AppContext.BaseDirectory, "Content", "nif.xml");
+        //    Console.WriteLine($"[INFO] Schema-driven load requested: {path} (schema={schemaPath})");
+        //    Console.WriteLine("[WARN] Model/NIF loader is not included in this build. Re-enable or implement the loader to use this feature.");
+        //    return;
+        //}
 
         // Quick test mode: `--test-load [path]` will load a NIF and print a summary
-        if (args.Length > 0 && args[0] == "--test-load")
-        {
-            string path = args.Length > 1 ? args[1] : "Content/Svart_Monk.nif";
-            Console.WriteLine($"[INFO] Test-load requested: {path}");
-            Console.WriteLine("[WARN] Model/NIF loader is not included in this build. Re-enable or implement the loader to use this feature.");
-            return;
-        }
-
-    // Rendering mode: default to debug cube. Use --model to force model rendering
-    // (note: model loading currently falls back to the debug cube because
-    // a model/NIF loader isn't included in this build).
+        //if (args.Length > 0 && args[0] == "--test-load")
+        //{
+        //    string path = args.Length > 1 ? args[1] : "Content/Svart_Monk.nif";
+        //    Console.WriteLine($"[INFO] Test-load requested: {path}");
+        //    Console.WriteLine("[WARN] Model/NIF loader is not included in this build. Re-enable or implement the loader to use this feature.");
+        //    return;
+        //}
         bool forceCube = true;
         bool forceModel = false;
         for (int i = 0; i < args.Length; i++)

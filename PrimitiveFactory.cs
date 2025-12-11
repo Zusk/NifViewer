@@ -2,7 +2,7 @@ using OpenTK.Mathematics;
 
 public static class PrimitiveFactory
 {
-    // Reuses the exact cube layout you’re already using.
+    // Factory for a simple cube model used for testing/debugging.
     public static Model CreateTestCubeModel()
     {
         float[] vertices =
@@ -64,7 +64,7 @@ public static class PrimitiveFactory
             Shininess = 32f
         };
 
-        // Try using the same texture you already set up.
+        // Try using the same texture in both DDS and PNG formats.
         // If missing, you can adjust or create a dummy material later.
         mat.Texture = Texture.Load("Content/texture.dds", "Content/texture.png");
 

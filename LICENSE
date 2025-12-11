@@ -1,21 +1,35 @@
-MIT License
+# License
+This project is licensed under the Mozilla Public License 2.0 (MPL-2.0).
 
-Copyright (c) 2025 Zusk
+This aligns with the CivFanatics forums "Modiquette":
+The Modiquette
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    When you upload content, you automatically grant permission for it to be used by all members of this community.
+    Therefore no permission is required to use content that is uploaded.
+    However, the modder should give credit for any content used in their mod.
+    If you identify another modder's content being used in a mod, notify the mod's modder.
+    If someone notifies you about another modder's non-credited content, you should then add the credit.
+    If you modify the game's source code or another modder's source code, you should release the new source code as part of your mod.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Background on permissions, credits and source code
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    No permission required
+    Requiring permission to use something here on the forums is not workable. This forum has existed for more than 10 years. It will probably also exist in 10 years or more. You don't know if you'll be here in 10 years, but what you've uploaded will still be here. If you left the forum, who should be asked? If you see something uploaded in 2002, 2005, 2008, and the modder has left, who should you ask? Working with permissions is therefore not realistic. We therefore consider that you imply with your upload that what you've uploaded is free to use. Else...what would be the point of an upload?
+
+    Give credit if you use something
+    Since no permissions are required, there is the need to honour someone's hard work. This is done with a "credit list", or "credits", which means that you name the persons whose work you used in your mod. A simple list at the end of your mod will do it. If you don't know who did something specific, then credit the mod team with a list of their members (Mod XY (user A, user B and others)), ... and a generic thank you to the all many unknown modders won't go amiss either.
+
+    Why is this important?
+    People do all sorts of things and upload them. Some things were made for fun, some because somebody requested them. People put time, creativity and nerves into these things, and sometimes they don't even use them themselves, but are only done for the other modders around. The only thing which is requested is that you put their name into your mod. Everyone who worked for that mod will then take a look at that list, and will get some satisfaction that their work is useful, and that other people can see it. If no credits are given, it will discourage these people. Why create something for someone else, if you then claim this work for yourself and don't honour the original creators? So please put the names there. It's not a difficult thing, it doesn't require much work, and it will make your fellow modders happy.​
+
+    Another point of view
+    Mods are big. They require lots of work. Different art is needed, different code is needed, different maps are needed. Nobody can do a big mod alone. Nobody can make all the needed units, leaderheads, buildings, maps and code parts. Everyone uses stuff from other people. If you have a long credit list, it shows that you have put much effort into finding the best art and the best code around to create a good mod for the players. Who would trust you if you claimed to have a great mod, but none of the master artists, nobody from the coding people is listed? A credit list is not something to be ashamed of. It shows that you put all possible work into your mod to make it great.​
+
+    Missing credits
+    Most people who have worked longer than a week on a mod will know this situation: You dig through your folders of downloaded stuff, and you find something which you really need at this moment...but you have no clue who made it. Should you not use it? No, that would be a waste of good art, code or maps. But now, if you've uploaded your mod and someone points out that you missed a person on your credit list, then please add them to the list. Like already said, please honour the people who did the work.​
+
+    The view from the other side:
+    If you see that someone didn't credit you, but used your work, then there's no need to be outraged. The organization of a big mod can be a mess. You forget stuff. It's like that. There's no malicious intent behind it. What to do? Point it out, but be nice. Especially new modders will be happy to see a "senior" drop by and comment on their mod. And while you leave a note ("nice work here" is something which you should be able to say for other mods), just say that XY is from you and that you'd like to be on the credit list. And like explained above, it should be a non-issue to do that.​
+
+    Modified code
+    The only point in Civ4 modding where you can release things which cannot be reused is the .dll. Some people might think now "great, my exclusive features, nobody can use them". Does this make you smart? Maybe. Does this make you to a prick? Sure. This community here relies on sharing things. Art is shared, maps are shared, code is shared. And if you're here, you too have probably taken things from the community, in form of the mentioned things or as advice. So not releasing your source code is not fair. Give something back to the community, so that everyone can benefit from it. Share your source code (if not in the direct download, then as a separate file), so that nobody will have a problem with redoing the same stuff and that the idea is not lost (...and this includes that you comment your code). Would be a shame if you did something great, but nobody is able to use it. It might even get lost, which would be an even bigger shame.
