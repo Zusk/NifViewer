@@ -3,8 +3,9 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
-using NifViewer.Nif;
-using NifViewer.Nif.ModelBuilder;
+// This build does not include a NIF/model loader. The app will print a
+// diagnostic line and render a debug cube by default. The loader and
+// dynamic model-rendering code may be added back in future revisions.
 
 class CubeWindow : GameWindow
 {
@@ -85,34 +86,22 @@ class CubeWindow : GameWindow
         GL.Enable(EnableCap.DepthTest);
         GL.ClearColor(0.1f, 0.1f, 0.1f, 1f);
 
-        NIFLoader.Debug = true;
-        var nifFile = NIFLoader.Load("Content/Svart_Monk.nif");
-        // Binary .nif -> Civ4 node objects -> MeshBuilder -> Mesh -> Model
-        var builtModel = NIFLoader.BuildModelFromNIF(nifFile);
+    // No model loader available: print diagnostic line and use the
+    // debug cube as the rendering fallback.
+    Console.WriteLine("[DEBUG] Model loader not present: showing debug cube.");
 
-        Console.WriteLine($"Loaded {nifFile.Blocks.Length} NIF blocks.");
-
-        // Choose model: honor explicit flags.
-        // - If --cube was requested (and not overridden) show the debug cube.
-        // - If --model was requested (and not overridden) attempt to build the model
-        //   but do NOT silently replace it with the cube if nothing was found.
-        // - If neither flag provided, attempt to build the model and fall back to
-        //   the debug cube only when the loader produced no meshes.
-        if (_forceCube && !_forceModel)
+        // Honor explicit flags to the extent possible. If the user requested
+        // model loading via --model, we don't have a loader here; warn and
+        // fall back to the cube.
+        if (_forceModel && !_forceCube)
         {
+            Console.WriteLine("[INFO] --model requested but model loading is currently disabled. Showing debug cube instead.");
             _model = PrimitiveFactory.CreateTestCubeModel();
-        }
-        else if (_forceModel && !_forceCube)
-        {
-            _model = builtModel;
-            if (_model.Meshes.Count == 0)
-                Console.WriteLine("[WARN] --model requested but no usable meshes were found; rendering an empty scene.");
         }
         else
         {
-            _model = builtModel.Meshes.Count > 0
-                ? builtModel
-                : PrimitiveFactory.CreateTestCubeModel();
+            // Default path: render the debug cube
+            _model = PrimitiveFactory.CreateTestCubeModel();
         }
 
         // ------------------------------------------------------

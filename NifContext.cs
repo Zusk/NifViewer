@@ -23,12 +23,12 @@ public sealed class NifContext
     /// <summary>Additional grouping information stored in the header.</summary>
     public uint[] Groups { get; set; } = Array.Empty<uint>();
 
-    /// <summary>All instantiated NiObject blocks, same order as in file.</summary>
-    public NiObject[] Blocks { get; set; } = Array.Empty<NiObject>();
+    /// <summary>All instantiated blocks (no NiObject type in this codebase; store as plain objects).</summary>
+    public object[] Blocks { get; set; } = Array.Empty<object>();
 
 
     /// <summary>Helper: resolve a block by index with type safety.</summary>
-    public T? GetBlock<T>(int index) where T : NiObject
+    public T? GetBlock<T>(int index) where T : class
     {
         if (index < 0 || index >= Blocks.Length) return null;
         return Blocks[index] as T;
@@ -37,11 +37,8 @@ public sealed class NifContext
     /// <summary>
     /// Returns a string from the palette or an empty string if the index is out of range.
     /// </summary>
-    public string GetString(int index)
-    {
-        if (index < 0 || index >= Strings.Count)
-            return string.Empty;
-
-        return Strings[index];
-    }
+    // NOTE: The project currently does not implement a full NIF loader or
+    // string-palette parser. The `Strings` list is retained so a future
+    // loader can populate and use it. An unused GetString helper was
+    // removed to avoid leaving orphaned functions in the codebase.
 }

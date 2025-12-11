@@ -41,7 +41,6 @@
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/svartalfar1 kopie.dds
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/Svart_Monk.nif
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/texture.png
-/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/nif.xml
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/NifViewer
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/NifViewer.deps.json
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/NifViewer.runtimeconfig.json

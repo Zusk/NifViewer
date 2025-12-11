@@ -11,22 +11,8 @@ class Program
         {
             string path = args.Length > 1 ? args[1] : "Content/Svart_Monk.nif";
             string schemaPath = args.Length > 2 ? args[2] : Path.Combine(AppContext.BaseDirectory, "Content", "nif.xml");
-            Console.WriteLine($"Schema-driven load: {path} (schema={schemaPath})");
-            try
-            {
-                var file = NIFLoader.LoadWithSchema(path, schemaPath);
-                Console.WriteLine($"Loaded {file.Blocks.Count} blocks via schema-driven reader.");
-                for (int i = 0; i < Math.Min(10, file.Blocks.Count); i++)
-                {
-                    var block = file.Blocks[i];
-                    Console.WriteLine($"[{i}] {block.TypeName} ({block.Fields.Count} fields)");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during schema-driven load: {ex}");
-            }
-
+            Console.WriteLine($"[INFO] Schema-driven load requested: {path} (schema={schemaPath})");
+            Console.WriteLine("[WARN] Model/NIF loader is not included in this build. Re-enable or implement the loader to use this feature.");
             return;
         }
 
@@ -34,25 +20,15 @@ class Program
         if (args.Length > 0 && args[0] == "--test-load")
         {
             string path = args.Length > 1 ? args[1] : "Content/Svart_Monk.nif";
-            Console.WriteLine($"Test loading: {path}");
-            try
-            {
-                var file = NIFLoader.Load(path);
-                Console.WriteLine($"Loaded {file.Blocks.Length} blocks.");
-                for (int i = 0; i < Math.Min(10, file.Blocks.Length); i++)
-                    Console.WriteLine($"[{i}] {file.Blocks[i].TypeName}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during load: {ex}");
-            }
-
+            Console.WriteLine($"[INFO] Test-load requested: {path}");
+            Console.WriteLine("[WARN] Model/NIF loader is not included in this build. Re-enable or implement the loader to use this feature.");
             return;
         }
 
-        // Rendering mode: default to model view. Use --cube to force the
-        // debug cube renderer, or --model to force model rendering.
-        bool forceCube = false;
+    // Rendering mode: default to debug cube. Use --model to force model rendering
+    // (note: model loading currently falls back to the debug cube because
+    // a model/NIF loader isn't included in this build).
+        bool forceCube = true;
         bool forceModel = false;
         for (int i = 0; i < args.Length; i++)
         {
