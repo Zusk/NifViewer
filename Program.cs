@@ -48,7 +48,7 @@ class Program
             Flags = ContextFlags.ForwardCompatible
         };
 
-        using var window = new CubeWindow(gws, nws, forceCube, forceModel);
+        using var window = new RenderWindow(gws, nws, forceCube, forceModel);
         window.Run();
     }
 }

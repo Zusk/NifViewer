@@ -79,3 +79,5 @@
 /home/zusk/NifViewer/NifViewer/obj/Debug/net8.0/NifViewer.pdb
 /home/zusk/NifViewer/NifViewer/obj/Debug/net8.0/NifViewer.genruntimeconfig.cache
 /home/zusk/NifViewer/NifViewer/obj/Debug/net8.0/ref/NifViewer.dll
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Shaders/phong.frag
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Shaders/phong.vert
