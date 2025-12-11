@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NifViewer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+883c175ebfa9da162df075ad37d85f152a6db416")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9fa3989bd16208b446bcded0791a6d70a1e2d2e0")]
 [assembly: System.Reflection.AssemblyProductAttribute("NifViewer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NifViewer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
