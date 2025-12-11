@@ -1,0 +1,60 @@
+# Ignore build and debug artifacts for .NET/Visual Studio projects
+# See https://github.com/github/gitignore/blob/main/VisualStudio.gitignore for reference
+
+# Build results
+bin/
+obj/
+
+# Debug / Release folders
+Debug/
+Release/
+
+# Visual Studio workspace files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Rider / JetBrains
+*.iml
+
+# NuGet
+packages/
+*.nupkg
+
+# Runtime and dependency files
+*.deps.json
+*.runtimeconfig.json
+*.runtimeconfig.dev.json
+
+# Symbols and native output
+*.pdb
+*.dll
+*.exe
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Python bytecode in subfolders (some tools in Content/ may use python)
+__pycache__/
+*.pyc
+
+# Ignore JetBrains project files
+.idea/
+
+# Keep this file in repo to avoid committing build outputs
