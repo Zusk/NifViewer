@@ -1,6 +1,7 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,17 @@ class RenderWindow : GameWindow
     private bool _forceCube = false;
     private bool _forceModel = false;
     private readonly string? _nifPath;
+    private readonly bool _benchmarkMode;
+    private readonly int _benchmarkCount;
 
     // Scene objects (meshes, debug helpers, etc.) rendered each frame.
     private List<ISceneObject> _sceneObjects = new List<ISceneObject>();
+
+    // Simple free-fly camera
+    private Vector3 _cameraPosition = new Vector3(0f, 15f, 40f);
+    private readonly Vector3 _cameraUp = Vector3.UnitY;
+    private Vector3 _cameraForward = -Vector3.UnitZ;
+    private float _movementSpeed = 5f;
 
     public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws)
         : base(gws, nws)
@@ -23,10 +32,17 @@ class RenderWindow : GameWindow
     }
 
     public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, string? nifPath = null)
+        : this(gws, nws, forceCube, forceModel, false, 10_000, nifPath)
+    {
+    }
+
+    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, bool benchmarkMode, int benchmarkCount, string? nifPath = null)
         : base(gws, nws)
     {
         _forceCube = forceCube;
         _forceModel = forceModel;
+        _benchmarkMode = benchmarkMode;
+        _benchmarkCount = benchmarkCount;
         _nifPath = nifPath;
     }
 
@@ -87,8 +103,7 @@ class RenderWindow : GameWindow
         // Update scene and draw.
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-        Matrix4 view =
-            Matrix4.CreateTranslation(0f, 0f, -3f);
+        Matrix4 view = Matrix4.LookAt(_cameraPosition, _cameraPosition + _cameraForward, _cameraUp);
 
         Matrix4 proj =
             Matrix4.CreatePerspectiveFieldOfView(
@@ -100,7 +115,7 @@ class RenderWindow : GameWindow
         // Shared shader state
         _shader!.Use();
         _shader.SetVector3("uLightPos", new Vector3(3f, 3f, 3f));
-        _shader.SetVector3("uViewPos", new Vector3(0f, 0f, 3f));
+        _shader.SetVector3("uViewPos", _cameraPosition);
         _shader.SetVector3("uAmbientColor", new Vector3(0.2f));
         _shader.SetVector3("uDiffuseColor", new Vector3(0.8f));
         _shader.SetVector3("uSpecularColor", new Vector3(1f));
@@ -129,12 +144,44 @@ class RenderWindow : GameWindow
             obj.Dispose();
     }
 
+    protected override void OnUpdateFrame(FrameEventArgs args)
+    {
+        base.OnUpdateFrame(args);
+
+        var keyboard = KeyboardState;
+        float delta = (float)args.Time;
+        float speed = _movementSpeed * delta * (keyboard.IsKeyDown(Keys.LeftShift) ? 3f : 1f);
+
+        Vector3 forward = new Vector3(_cameraForward.X, 0f, _cameraForward.Z);
+        if (forward.LengthSquared > 0.0001f)
+            forward.Normalize();
+        Vector3 right = Vector3.Normalize(Vector3.Cross(forward, _cameraUp));
+
+        if (keyboard.IsKeyDown(Keys.W)) _cameraPosition += forward * speed;
+        if (keyboard.IsKeyDown(Keys.S)) _cameraPosition -= forward * speed;
+        if (keyboard.IsKeyDown(Keys.A)) _cameraPosition -= right * speed;
+        if (keyboard.IsKeyDown(Keys.D)) _cameraPosition += right * speed;
+        if (keyboard.IsKeyDown(Keys.Space)) _cameraPosition += _cameraUp * speed;
+        if (keyboard.IsKeyDown(Keys.LeftControl)) _cameraPosition -= _cameraUp * speed;
+    }
+
     private bool TryAddNifModel(string path)
     {
         try
         {
-            var obj = NifModelSceneObject.Load(path);
-            _sceneObjects.Add(obj);
+            var loader = new Civ4NifLoader();
+            var model = loader.LoadModel(path);
+            Console.WriteLine($"[INFO] Loaded NIF model \"{Path.GetFileName(path)}\" ({model.Meshes.Count} mesh(es))");
+
+            if (_benchmarkMode)
+            {
+                var instanced = InstancedModelSceneObject.CreateCube(model, _benchmarkCount);
+                _sceneObjects.Add(instanced);
+            }
+            else
+            {
+                _sceneObjects.Add(new NifModelSceneObject(model));
+            }
             return true;
         }
         catch (Exception ex)

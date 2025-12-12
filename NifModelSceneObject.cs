@@ -11,7 +11,7 @@ public sealed class NifModelSceneObject : ISceneObject
     private readonly float _autoScale;
     private float _time;
 
-    private NifModelSceneObject(Model model)
+    public NifModelSceneObject(Model model)
     {
         _model = model;
         _autoScale = ComputeAutoScale(model);
@@ -34,6 +34,7 @@ public sealed class NifModelSceneObject : ISceneObject
     public void Render(Shader shader, Matrix4 view, Matrix4 proj)
     {
         Matrix4 modelMatrix =
+            Matrix4.CreateRotationX(-MathF.PI / 2f) * // orient Gamebryo Z-up into our Y-up world
             Matrix4.CreateRotationY(_time * 0.2f) *
             Matrix4.CreateScale(_autoScale);
 
@@ -66,7 +67,7 @@ public sealed class NifModelSceneObject : ISceneObject
         throw new FileNotFoundException("NIF file could not be located.", path);
     }
 
-    private static float ComputeAutoScale(Model model)
+    internal static float ComputeAutoScale(Model model)
     {
         float maxAbs = 0f;
         foreach (var mesh in model.Meshes)
