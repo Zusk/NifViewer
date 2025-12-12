@@ -127,6 +127,7 @@ Blocks 0‑36 and 45‑56 are the bone/collision tree (alternating `NiNode` and 
 
 - `IMPORTANT_READ_ME.txt` notes that all strings are stored as `[uint32 length][bytes]` with no shared palette except for the very first header string. That is exactly what we see: the “name” field of block 0 encodes `spearman_fx.nif` inline, and later blocks (e.g. another `NiNode` around offset `0x1FE`) do the same for `monk.nif`.
 - Because `Num Strings` is zero, the `StringIndex` type described in `doc/string.html` effectively degenerates into an immediate sized string for this file family. Any parser for Civ 4 assets must therefore ignore the header string table (it is empty) and read string fields as `[uint32 length][latin1/ASCII bytes]`.
+- **Outlier – NiNode indices.** Civ 4’s unit NIFs occasionally encode names as string-table indices even though the header says `Num Strings = 0`. The pattern is `name_index (uint32)` → `0xFFFFFFFF` sentinel → `uint32 actual_length` → inline bytes. The “MD NonAccum” node (see `Content/archer.nif` at offset `0x894`) stores `0xFF7FFFFF` as the index followed by this sentinel block. A robust parser must detect “length” values larger than the remaining stream and probe for the sentinel before falling back to the legacy `[len][bytes]` form. This behavior is consistent with the `StringIndex` documentation and the Gamebryo toolchain; Civ 4 simply writes the baked strings inline immediately after the sentinel.
 
 ## Other 20.0.0.4 samples
 
@@ -159,6 +160,9 @@ The goal is to feed a renderer or exporter (like `reference_projects/nif-main`) 
 4. **NiSkinInstance / NiSkinData (skinned meshes)**  
    - `NiTriShape.skin_instance_ref` → `NiSkinInstance`: identifies the skeleton root and the list of bone block refs.  
    - `NiSkinInstance.data_ref` → `NiSkinData`: per-bone bind pose, optional vertex weights (`VertexWeightIndexes` + `VertexWeights`), and bounding spheres. This is only needed for meshes that animate; static props simply omit the skin fields.
+
+5. **NiTriStrips (strip-based geometry)**  
+   - Some Civ 4 assets (e.g. `horsearcher.nif`) replace `NiTriShape` with `NiTriStrips`. The transform/material sections are identical, but the geometry block points at `NiTriStripsData`, which stores strips instead of discrete faces. Each data block encodes `num_strips`, a `strip_lengths[]` array, a `has_points` flag, and a concatenated `points[]` list whose length equals the sum of strip lengths (see `doc/NiTriStripsData.html`). Reconstructing triangles is the standard OpenGL strip algorithm: walk each strip, emit `(i, i+1, i+2)` triples, and flip winding after every triangle. Degenerate runs (duplicate indices) also flip winding. Once expanded back into a triangle list, the data drops into the same pipeline as `NiTriShapeData`.
 
 ### Scripted extraction example
 

@@ -11,7 +11,7 @@ class CubeWindow : RenderWindow
     }
 
     public CubeWindow(OpenTK.Windowing.Desktop.GameWindowSettings gws, OpenTK.Windowing.Desktop.NativeWindowSettings nws, bool forceCube, bool forceModel)
-        : base(gws, nws, forceCube, forceModel)
+        : base(gws, nws, forceCube, forceModel, true)
     {
     }
 }

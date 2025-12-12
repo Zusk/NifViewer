@@ -81,3 +81,12 @@
 /home/zusk/NifViewer/NifViewer/obj/Debug/net8.0/ref/NifViewer.dll
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Shaders/phong.frag
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Shaders/phong.vert
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/archer.nif
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/archer_128.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/archer_arrow.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/archer_weapons.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/horsearcher.nif
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/horsearcher_horse_128.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/kithra body.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/kithra stuff.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/orcears.dds

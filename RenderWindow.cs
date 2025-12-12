@@ -13,6 +13,7 @@ class RenderWindow : GameWindow
     private bool _forceCube = false;
     private bool _forceModel = false;
     private readonly string? _nifPath;
+    private readonly bool _bakeTransforms = true;
 
     // Scene objects (meshes, debug helpers, etc.) rendered each frame.
     private List<ISceneObject> _sceneObjects = new List<ISceneObject>();
@@ -22,12 +23,13 @@ class RenderWindow : GameWindow
     {
     }
 
-    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, string? nifPath = null)
+    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, bool bakeTransforms, string? nifPath = null)
         : base(gws, nws)
     {
         _forceCube = forceCube;
         _forceModel = forceModel;
         _nifPath = nifPath;
+        _bakeTransforms = bakeTransforms;
     }
 
     protected override void OnLoad()
@@ -133,7 +135,7 @@ class RenderWindow : GameWindow
     {
         try
         {
-            var obj = NifModelSceneObject.Load(path);
+            var obj = NifModelSceneObject.Load(path, _bakeTransforms);
             _sceneObjects.Add(obj);
             return true;
         }

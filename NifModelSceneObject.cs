@@ -17,11 +17,11 @@ public sealed class NifModelSceneObject : ISceneObject
         _autoScale = ComputeAutoScale(model);
     }
 
-    public static NifModelSceneObject Load(string nifPath)
+    public static NifModelSceneObject Load(string nifPath, bool bakeTransforms)
     {
         string resolvedPath = ResolvePath(nifPath);
         var loader = new Civ4NifLoader();
-        var model = loader.LoadModel(resolvedPath);
+        var model = loader.LoadModel(resolvedPath, bakeTransforms: bakeTransforms);
         Console.WriteLine($"[INFO] Loaded NIF model \"{Path.GetFileName(resolvedPath)}\" ({model.Meshes.Count} mesh(es))");
         return new NifModelSceneObject(model);
     }

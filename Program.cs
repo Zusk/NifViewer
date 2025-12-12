@@ -1,4 +1,6 @@
-﻿using OpenTK.Windowing.Desktop;
+﻿using System;
+using System.IO;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 
@@ -9,6 +11,8 @@ class Program
         bool forceCube = false;
         bool forceModel = true;
         string? nifPath = null;
+        bool loadOnly = false;
+        bool bakeTransforms = true;
 
         for (int i = 0; i < args.Length; i++)
         {
@@ -30,7 +34,33 @@ class Program
                         forceCube = false;
                     }
                     break;
+                case "--load-only":
+                    loadOnly = true;
+                    forceModel = true;
+                    forceCube = false;
+                    break;
+                case "--no-transform-bake":
+                    bakeTransforms = false;
+                    break;
             }
+        }
+
+        if (loadOnly)
+        {
+            string desiredPath = nifPath ?? Path.Combine(AppContext.BaseDirectory, "Content", "Svart_Monk.nif");
+            var loader = new Civ4NifLoader();
+            try
+            {
+                loader.LoadModel(desiredPath, createGpuMeshes: false, bakeTransforms: bakeTransforms);
+                Console.WriteLine($"[INFO] Successfully loaded \"{Path.GetFileName(desiredPath)}\" (load-only mode).");
+                Environment.ExitCode = 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] Load-only mode failed for \"{desiredPath}\": {ex}");
+                Environment.ExitCode = 1;
+            }
+            return;
         }
 
         var gws = GameWindowSettings.Default;
@@ -45,7 +75,7 @@ class Program
             Flags = ContextFlags.ForwardCompatible
         };
 
-        using var window = new RenderWindow(gws, nws, forceCube, forceModel, nifPath);
+        using var window = new RenderWindow(gws, nws, forceCube, forceModel, bakeTransforms, nifPath);
         window.Run();
     }
 }

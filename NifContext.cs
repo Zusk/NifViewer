@@ -10,7 +10,6 @@ public sealed class NifContext
     public uint NumBlocks { get; set; }
 
     public uint NumGroups { get; set; }
-
     /// <summary>Index → type name (e.g. 0 → "NiNode").</summary>
     public string[] BlockTypes { get; set; } = Array.Empty<string>();
 
