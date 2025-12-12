@@ -22,4 +22,10 @@
       </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="reference_projects\**\*.cs" />
+    <EmbeddedResource Remove="reference_projects\**\*" />
+    <None Remove="reference_projects\**\*" />
+  </ItemGroup>
+
 </Project>

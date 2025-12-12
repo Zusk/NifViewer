@@ -12,6 +12,7 @@ class RenderWindow : GameWindow
     private Shader? _shader;
     private bool _forceCube = false;
     private bool _forceModel = false;
+    private readonly string? _nifPath;
 
     // Scene objects (meshes, debug helpers, etc.) rendered each frame.
     private List<ISceneObject> _sceneObjects = new List<ISceneObject>();
@@ -21,11 +22,12 @@ class RenderWindow : GameWindow
     {
     }
 
-    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel)
+    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, string? nifPath = null)
         : base(gws, nws)
     {
         _forceCube = forceCube;
         _forceModel = forceModel;
+        _nifPath = nifPath;
     }
 
     protected override void OnLoad()
@@ -60,17 +62,22 @@ class RenderWindow : GameWindow
         _shader!.SetInt("uTexture", 0);
 
         // Add scene objects according to flags.
-        // The model loader is not present in this build; always fall back to debug cube.
-        if (_forceModel && !_forceCube)
+        if (_forceCube && !_forceModel)
         {
-            Console.WriteLine("[INFO] --model requested but model loading is currently disabled. Adding debug cube instead.");
             _sceneObjects.Add(new DebugCube());
+            return;
         }
-        else
+
+        if (_forceModel)
         {
-            // Default: show debug cube as the scene object
-            _sceneObjects.Add(new DebugCube());
+            string desiredPath = _nifPath ?? Path.Combine(AppContext.BaseDirectory, "Content", "Svart_Monk.nif");
+            if (TryAddNifModel(desiredPath))
+                return;
+
+            Console.WriteLine("[INFO] Falling back to debug cube because the model could not be loaded.");
         }
+
+        _sceneObjects.Add(new DebugCube());
     }
 
     protected override void OnRenderFrame(FrameEventArgs args)
@@ -120,5 +127,20 @@ class RenderWindow : GameWindow
         base.OnUnload();
         foreach (var obj in _sceneObjects)
             obj.Dispose();
+    }
+
+    private bool TryAddNifModel(string path)
+    {
+        try
+        {
+            var obj = NifModelSceneObject.Load(path);
+            _sceneObjects.Add(obj);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[WARN] Failed to load NIF model \"{path}\": {ex.Message}");
+            return false;
+        }
     }
 }

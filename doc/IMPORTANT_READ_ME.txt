@@ -1,0 +1,3 @@
+-The info from the header appears in the same order in binary file as it does in nifscope UI
+-nifscopeUI has types of most variables shown in UI what makes reverse engineering easier
+-All strings are saved in the following way: length (4 bytes), then on the bytes number equal to length there are characters there is content of the string. The only exception is the first header string, it starts from the beginning of the file end ends with '\n'.
