@@ -216,6 +216,9 @@ public sealed class Civ4NifLoader
                 case NiTexturingPropertyBlock texProp:
                     material.Texture ??= TryLoadTexture(context, texProp, contentDir);
                     break;
+                case NiSpecularPropertyBlock:
+                    // No numeric fields beyond flags; presence enables specular highlights.
+                    break;
             }
         }
 
@@ -458,6 +461,7 @@ public sealed class Civ4NifLoader
             "NiSourceTexture" => ParseNiSourceTexture(reader),
             "NiAlphaProperty" => ParseNiAlphaProperty(reader),
             "NiMaterialProperty" => ParseNiMaterialProperty(reader),
+            "NiSpecularProperty" => ParseNiSpecularProperty(reader),
             "NiAlphaController" => ParseNiAlphaController(reader),
             "NiTriShapeData" => ParseNiTriShapeData(reader),
             "NiStencilProperty" => ParseNiStencilProperty(reader),
@@ -670,6 +674,12 @@ public sealed class Civ4NifLoader
             Glossiness = reader.ReadSingle(),
             Alpha = reader.ReadSingle()
         };
+    }
+
+    private NiSpecularPropertyBlock ParseNiSpecularProperty(BinaryReader reader)
+    {
+        var info = ReadGeneralInfo(reader, includeFlags: true);
+        return new NiSpecularPropertyBlock(info);
     }
 
     private NiVertexColorPropertyBlock ParseNiVertexColorProperty(BinaryReader reader)
@@ -1438,6 +1448,11 @@ public sealed class Civ4NifLoader
         public Vector3 EmissiveColor { get; set; }
         public float Glossiness { get; set; }
         public float Alpha { get; set; }
+    }
+
+    private sealed class NiSpecularPropertyBlock : NamedBlock
+    {
+        public NiSpecularPropertyBlock(GeneralInfo info) : base(info) { }
     }
 
     private sealed class NiVertexColorPropertyBlock : NamedBlock

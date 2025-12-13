@@ -90,3 +90,6 @@
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/kithra body.dds
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/kithra stuff.dds
 /home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/orcears.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/dragon.nif
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/dragon_horned_256.dds
+/home/zusk/NifViewer/NifViewer/bin/Debug/net8.0/Content/dragon_main_512.dds
