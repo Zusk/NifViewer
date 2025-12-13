@@ -48,18 +48,7 @@ class Program
         if (loadOnly)
         {
             string desiredPath = nifPath ?? Path.Combine(AppContext.BaseDirectory, "Content", "Svart_Monk.nif");
-            var loader = new Civ4NifLoader();
-            try
-            {
-                loader.LoadModel(desiredPath, createGpuMeshes: false, bakeTransforms: bakeTransforms);
-                Console.WriteLine($"[INFO] Successfully loaded \"{Path.GetFileName(desiredPath)}\" (load-only mode).");
-                Environment.ExitCode = 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ERROR] Load-only mode failed for \"{desiredPath}\": {ex}");
-                Environment.ExitCode = 1;
-            }
+            RunLoadOnly(desiredPath, bakeTransforms);
             return;
         }
 
@@ -77,5 +66,22 @@ class Program
 
         using var window = new RenderWindow(gws, nws, forceCube, forceModel, bakeTransforms, nifPath);
         window.Run();
+    }
+
+    private static void RunLoadOnly(string desiredPath, bool bakeTransforms)
+    {
+        var loader = new Civ4NifLoader();
+        Console.WriteLine($"[INFO] Running load-only mode against \"{Path.GetFileName(desiredPath)}\"...");
+        try
+        {
+            loader.LoadModel(desiredPath, createGpuMeshes: false, bakeTransforms: bakeTransforms);
+            Console.WriteLine($"[INFO] Successfully loaded \"{Path.GetFileName(desiredPath)}\" (load-only mode).");
+            Environment.ExitCode = 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Load-only mode failed for \"{desiredPath}\": {ex}");
+            Environment.ExitCode = 1;
+        }
     }
 }
