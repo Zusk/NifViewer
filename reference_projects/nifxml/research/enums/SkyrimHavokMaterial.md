@@ -1,0 +1,88 @@
+# Enum `SkyrimHavokMaterial`
+
+Bethesda Havok. Material descriptor for a Havok shape in Skyrim. CRC32 of the lowercase of the Creation Kit Material Name.
+
+## Attributes
+- **name**: `SkyrimHavokMaterial`
+- **storage**: `uint`
+- **versions**: `#SKY_AND_LATER#`
+
+## Values
+- `option` `SKY_HAV_MAT_NONE` (`value`=`0`) – Invalid Material
+- `option` `SKY_HAV_MAT_BROKEN_STONE` (`value`=`131151687`) – Broken Stone
+- `option` `SKY_HAV_MAT_MATERIAL_CARRIAGE_WHEEL` (`value`=`322207473`) – Material Carriage Wheel
+- `option` `SKY_HAV_MAT_MATERIAL_METAL_LIGHT` (`value`=`346811165`) – Material Metal Light
+- `option` `SKY_HAV_MAT_LIGHT_WOOD` (`value`=`365420259`) – Light Wood
+- `option` `SKY_HAV_MAT_SNOW` (`value`=`398949039`) – Snow
+- `option` `SKY_HAV_MAT_GRAVEL` (`value`=`428587608`) – Gravel
+- `option` `SKY_HAV_MAT_MATERIAL_CHAIN_METAL` (`value`=`438912228`) – Material Chain Metal
+- `option` `SKY_HAV_MAT_BOTTLE` (`value`=`493553910`) – Bottle
+- `option` `SKY_HAV_MAT_WOOD` (`value`=`500811281`) – Wood
+- `option` `SKY_HAV_MAT_SKIN` (`value`=`591247106`) – Skin
+- `option` `SKY_HAV_MAT_UNKNOWN_617099282` (`value`=`617099282`) – Unknown in Creation Kit v1.9.32.0. Found in Dawnguard DLC in meshes\dlc01\clutter\dlc01deerskin.nif.
+- `option` `SKY_HAV_MAT_BARREL` (`value`=`732141076`) – Barrel
+- `option` `SKY_HAV_MAT_MATERIAL_CERAMIC_MEDIUM` (`value`=`781661019`) – Material Ceramic Medium
+- `option` `SKY_HAV_MAT_MATERIAL_BASKET` (`value`=`790784366`) – Material Basket
+- `option` `SKY_HAV_MAT_ICE` (`value`=`873356572`) – Ice
+- `option` `SKY_HAV_MAT_STAIRS_GLASS` (`value`=`880200008`) – Stairs Glass
+- `option` `SKY_HAV_MAT_STAIRS_STONE` (`value`=`899511101`) – Stairs Stone
+- `option` `SKY_HAV_MAT_WATER` (`value`=`1024582599`) – Water
+- `option` `SKY_HAV_MAT_UNKNOWN_1028101969` (`value`=`1028101969`) – Unknown in Creation Kit v1.6.89.0. Found in actors\draugr\character assets\skeletons.nif.
+- `option` `SKY_HAV_MAT_MATERIAL_BLADE_1HAND` (`value`=`1060167844`) – Material Blade 1 Hand
+- `option` `SKY_HAV_MAT_MATERIAL_BOOK` (`value`=`1264672850`) – Material Book
+- `option` `SKY_HAV_MAT_MATERIAL_CARPET` (`value`=`1286705471`) – Material Carpet
+- `option` `SKY_HAV_MAT_SOLID_METAL` (`value`=`1288358971`) – Solid Metal
+- `option` `SKY_HAV_MAT_MATERIAL_AXE_1HAND` (`value`=`1305674443`) – Material Axe 1Hand
+- `option` `SKY_HAV_MAT_UNKNOWN_1440721808` (`value`=`1440721808`) – Unknown in Creation Kit v1.6.89.0. Found in armor\draugr\draugrbootsfemale_go.nif or armor\amuletsandrings\amuletgnd.nif.
+- `option` `SKY_HAV_MAT_STAIRS_WOOD` (`value`=`1461712277`) – Stairs Wood
+- `option` `SKY_HAV_MAT_MUD` (`value`=`1486385281`) – Mud
+- `option` `SKY_HAV_MAT_MATERIAL_BOULDER_SMALL` (`value`=`1550912982`) – Material Boulder Small
+- `option` `SKY_HAV_MAT_STAIRS_SNOW` (`value`=`1560365355`) – Stairs Snow
+- `option` `SKY_HAV_MAT_HEAVY_STONE` (`value`=`1570821952`) – Heavy Stone
+- `option` `SKY_HAV_MAT_UNKNOWN_1574477864` (`value`=`1574477864`) – Unknown in Creation Kit v1.6.89.0. Found in actors\dragon\character assets\skeleton.nif.
+- `option` `SKY_HAV_MAT_UNKNOWN_1591009235` (`value`=`1591009235`) – Unknown in Creation Kit v1.6.89.0. Found in trap objects or clutter\displaycases\displaycaselgangled01.nif or actors\deer\character assets\skeleton.nif.
+- `option` `SKY_HAV_MAT_MATERIAL_BOWS_STAVES` (`value`=`1607128641`) – Material Bows Staves
+- `option` `SKY_HAV_MAT_MATERIAL_WOOD_AS_STAIRS` (`value`=`1803571212`) – Material Wood As Stairs
+- `option` `SKY_HAV_MAT_GRASS` (`value`=`1848600814`) – Grass
+- `option` `SKY_HAV_MAT_MATERIAL_BOULDER_LARGE` (`value`=`1885326971`) – Material Boulder Large
+- `option` `SKY_HAV_MAT_MATERIAL_STONE_AS_STAIRS` (`value`=`1886078335`) – Material Stone As Stairs
+- `option` `SKY_HAV_MAT_MATERIAL_BLADE_2HAND` (`value`=`2022742644`) – Material Blade 2Hand
+- `option` `SKY_HAV_MAT_MATERIAL_BOTTLE_SMALL` (`value`=`2025794648`) – Material Bottle Small
+- `option` `SKY_HAV_MAT_SAND` (`value`=`2168343821`) – Sand
+- `option` `SKY_HAV_MAT_HEAVY_METAL` (`value`=`2229413539`) – Heavy Metal
+- `option` `SKY_HAV_MAT_UNKNOWN_2290050264` (`value`=`2290050264`) – Unknown in Creation Kit v1.9.32.0. Found in Dawnguard DLC in meshes\dlc01\clutter\dlc01sabrecatpelt.nif.
+- `option` `SKY_HAV_MAT_DRAGON` (`value`=`2518321175`) – Dragon
+- `option` `SKY_HAV_MAT_MATERIAL_BLADE_1HAND_SMALL` (`value`=`2617944780`) – Material Blade 1Hand Small
+- `option` `SKY_HAV_MAT_MATERIAL_SKIN_SMALL` (`value`=`2632367422`) – Material Skin Small
+- `option` `SKY_HAV_MAT_MATERIAL_POTS_PANS` (`value`=`2742858142`) – Material Pots Pans
+- `option` `SKY_HAV_MAT_STAIRS_BROKEN_STONE` (`value`=`2892392795`) – Stairs Broken Stone
+- `option` `SKY_HAV_MAT_MATERIAL_SKIN_LARGE` (`value`=`2965929619`) – Material Skin Large
+- `option` `SKY_HAV_MAT_ORGANIC` (`value`=`2974920155`) – Organic
+- `option` `SKY_HAV_MAT_MATERIAL_BONE` (`value`=`3049421844`) – Material Bone
+- `option` `SKY_HAV_MAT_HEAVY_WOOD` (`value`=`3070783559`) – Heavy Wood
+- `option` `SKY_HAV_MAT_MATERIAL_CHAIN` (`value`=`3074114406`) – Material Chain
+- `option` `SKY_HAV_MAT_DIRT` (`value`=`3106094762`) – Dirt
+- `option` `SKY_HAV_MAT_MATERIAL_SKIN_METAL_LARGE` (`value`=`3387452107`) – Material Skin Metal Large
+- `option` `SKY_HAV_MAT_MATERIAL_ARMOR_LIGHT` (`value`=`3424720541`) – Material Armor Light
+- `option` `SKY_HAV_MAT_MATERIAL_SHIELD_LIGHT` (`value`=`3448167928`) – Material Shield Light
+- `option` `SKY_HAV_MAT_MATERIAL_COIN` (`value`=`3589100606`) – Material Coin
+- `option` `SKY_HAV_MAT_MATERIAL_SHIELD_HEAVY` (`value`=`3702389584`) – Material Shield Heavy
+- `option` `SKY_HAV_MAT_MATERIAL_ARMOR_HEAVY` (`value`=`3708432437`) – Material Armor Heavy
+- `option` `SKY_HAV_MAT_MATERIAL_ARROW` (`value`=`3725505938`) – Material Arrow
+- `option` `SKY_HAV_MAT_GLASS` (`value`=`3739830338`) – Glass
+- `option` `SKY_HAV_MAT_STONE` (`value`=`3741512247`) – Stone
+- `option` `SKY_HAV_MAT_MATERIAL_WATER_PUDDLE` (`value`=`3764646153`) – Material Water Puddle
+- `option` `SKY_HAV_MAT_CLOTH` (`value`=`3839073443`) – Cloth
+- `option` `SKY_HAV_MAT_MATERIAL_SKIN_METAL_SMALL` (`value`=`3855001958`) – Material Skin Metal Small
+- `option` `SKY_HAV_MAT_WARD` (`value`=`3895166727`) – Ward
+- `option` `SKY_HAV_MAT_WEB` (`value`=`3934839107`) – Web
+- `option` `SKY_HAV_MAT_MATERIAL_BLUNT_2HAND` (`value`=`3969592277`) – Material Blunt 2Hand
+- `option` `SKY_HAV_MAT_UNKNOWN_4239621792` (`value`=`4239621792`) – Unknown in Creation Kit v1.9.32.0. Found in Dawnguard DLC in meshes\dlc01\prototype\dlc1protoswingingbridge.nif.
+- `option` `SKY_HAV_MAT_MATERIAL_BOULDER_MEDIUM` (`value`=`4283869410`) – Material Boulder Medium
+- `option` `SKY_HAV_MAT_UNKNOWN_2794252627` (`value`=`2794252627`)
+- `option` `SKY_HAV_MAT_UNKNOWN_1668849266` (`value`=`1668849266`)
+- `option` `SKY_HAV_MAT_UNKNOWN_1734341287` (`value`=`1734341287`)
+- `option` `SKY_HAV_MAT_UNKNOWN_3974071006` (`value`=`3974071006`)
+- `option` `SKY_HAV_MAT_UNKNOWN_3941234649` (`value`=`3941234649`) – tfxsteelswordbloody
+- `option` `SKY_HAV_MAT_UNKNOWN_1820198263` (`value`=`1820198263`) – steelgreatsword
+

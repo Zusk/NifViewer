@@ -1,0 +1,114 @@
+# Niobject `NiParticleSystemController`
+
+A generic particle system time controller object.
+
+## Attributes
+- **inherit**: `NiTimeController`
+- **module**: `NiLegacy`
+- **name**: `NiParticleSystemController`
+- **until**: `V10_0_1_0`
+
+## Fields
+- **Old Speed** (`uint`)
+  - Attributes: `until`=`3.1`
+  - Particle speed in old files
+- **Speed** (`float`)
+  - Attributes: `since`=`3.3.0.13`
+  - Particle speed
+- **Speed Variation** (`float`)
+  - Particle random speed modifier
+- **Declination** (`float`)
+  - vertical emit direction [radians]
+0.0 : up
+1.6 : horizontal
+3.1416 : down
+- **Declination Variation** (`float`)
+  - emitter's vertical opening angle [radians]
+- **Planar Angle** (`float`)
+  - horizontal emit direction
+- **Planar Angle Variation** (`float`)
+  - emitter's horizontal opening angle
+- **Initial Normal** (`Vector3`)
+  - Attributes: `default`=`#X_AXIS#`
+- **Initial Color** (`Color4`)
+  - Attributes: `default`=`#VEC4_ONE#`
+- **Initial Size** (`float`)
+  - Attributes: `default`=`1.0`
+  - Particle size
+- **Emit Start Time** (`float`)
+  - Particle emit start time
+- **Emit Stop Time** (`float`)
+  - Particle emit stop time
+- **Reset Particle System** (`byte`)
+  - Attributes: `since`=`3.3.0.13`
+- **Old Emit Rate** (`uint`)
+  - Attributes: `until`=`3.1`
+  - Particle emission rate in old files
+- **Birth Rate** (`float`)
+  - Attributes: `since`=`3.3.0.13`
+  - Particle emission rate (particles per second)
+- **Lifetime** (`float`)
+  - Particle lifetime
+- **Lifetime Variation** (`float`)
+  - Particle lifetime random modifier
+- **Use Birth Rate** (`byte`)
+  - Attributes: `since`=`3.3.0.13`
+- **Spawn On Death** (`byte`)
+  - Attributes: `since`=`3.3.0.13`
+- **Emitter Dimensions** (`Vector3`)
+- **Emitter** (`Ptr`)
+  - Attributes: `template`=`NiAVObject`
+  - The object which acts as the basis for the particle emitter.
+- **Num Spawn Generations** (`ushort`)
+  - Attributes: `default`=`1`, `since`=`3.3.0.13`
+- **Percentage Spawned** (`float`)
+  - Attributes: `default`=`1.0`, `since`=`3.3.0.13`
+- **Spawn Multiplier** (`ushort`)
+  - Attributes: `since`=`3.3.0.13`
+- **Spawn Speed Chaos** (`float`)
+  - Attributes: `since`=`3.3.0.13`
+- **Spawn Dir Chaos** (`float`)
+  - Attributes: `since`=`3.3.0.13`
+- **Particle Velocity** (`Vector3`)
+  - Attributes: `until`=`3.1`
+  - Particle velocity
+- **Particle Unknown Vector** (`Vector3`)
+  - Attributes: `until`=`3.1`
+- **Particle Lifetime** (`float`)
+  - Attributes: `until`=`3.1`
+  - The particle's age.
+- **Particle Link** (`Ref`)
+  - Attributes: `template`=`NiObject`, `until`=`3.1`
+- **Particle Timestamp** (`uint`)
+  - Attributes: `until`=`3.1`
+  - Timestamp of the last update.
+- **Particle Unknown Short** (`ushort`)
+  - Attributes: `until`=`3.1`
+  - Unknown short
+- **Particle Vertex Id** (`ushort`)
+  - Attributes: `until`=`3.1`
+  - Particle/vertex index matches array index
+- **Num Particles** (`ushort`)
+  - Attributes: `since`=`3.3.0.13`
+  - Size of the following array. (Maximum number of simultaneous active particles)
+- **Num Valid** (`ushort`)
+  - Attributes: `since`=`3.3.0.13`
+  - Number of valid entries in the following array. (Number of active particles at the time the system was saved)
+- **Particles** (`NiParticleInfo`)
+  - Attributes: `length`=`Num Particles`, `since`=`3.3.0.13`
+- **Emitter Modifier** (`Ref`)
+  - Attributes: `since`=`3.3.0.13`, `template`=`NiEmitterModifier`
+- **Particle Modifier** (`Ref`)
+  - Attributes: `template`=`NiParticleModifier`
+  - Link to some optional particle modifiers (NiGravity, NiParticleGrowFade, NiParticleBomb, ...)
+- **Particle Collider** (`Ref`)
+  - Attributes: `template`=`NiParticleCollider`
+- **Static Target Bound** (`byte`)
+  - Attributes: `since`=`3.3.0.15`
+- **Color Data** (`Ref`)
+  - Attributes: `template`=`NiColorData`, `until`=`3.1`
+- **Unknown Float 1** (`float`)
+  - Attributes: `until`=`3.1`
+- **Unknown Floats 2** (`float`)
+  - Attributes: `length`=`Particle Unknown Short`, `until`=`3.1`
+

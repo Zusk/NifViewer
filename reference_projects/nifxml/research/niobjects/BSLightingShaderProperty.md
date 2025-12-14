@@ -1,0 +1,149 @@
+# Niobject `BSLightingShaderProperty`
+
+Bethesda shader property for Skyrim and later.
+
+## Attributes
+- **inherit**: `BSShaderProperty`
+- **module**: `BSMain`
+- **name**: `BSLightingShaderProperty`
+- **stopcond**: `#BSVER# #GTE# 155 #AND# Name`
+- **versions**: `#SKY_AND_LATER#`
+
+## Fields
+- **Shader Flags 1** (`SkyrimShaderPropertyFlags1`)
+  - Attributes: `default`=`0x82400301`, `suffix`=`SK`, `vercond`=`#NI_BS_LT_FO4#`
+  - Skyrim Shader Flags for setting render/shader options.
+- **Shader Flags 2** (`SkyrimShaderPropertyFlags2`)
+  - Attributes: `default`=`0x8021`, `suffix`=`SK`, `vercond`=`#NI_BS_LT_FO4#`
+  - Skyrim Shader Flags for setting render/shader options.
+- **Shader Flags 1** (`Fallout4ShaderPropertyFlags1`)
+  - Attributes: `default`=`0x80400201`, `suffix`=`FO4`, `vercond`=`#BS_FO4#`
+  - Fallout 4 Shader Flags. Mostly overridden if "Name" is a path to a BGSM/BGEM file.
+- **Shader Flags 2** (`Fallout4ShaderPropertyFlags2`)
+  - Attributes: `default`=`1`, `suffix`=`FO4`, `vercond`=`#BS_FO4#`
+  - Fallout 4 Shader Flags. Mostly overridden if "Name" is a path to a BGSM/BGEM file.
+- **Shader Type** (`BSShaderType155`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Num SF1** (`uint`)
+  - Attributes: `vercond`=`#BS_GTE_132#`
+- **Num SF2** (`uint`)
+  - Attributes: `vercond`=`#BS_GTE_152#`
+- **SF1** (`BSShaderCRC32`)
+  - Attributes: `length`=`Num SF1`, `vercond`=`#BS_GTE_132#`
+- **SF2** (`BSShaderCRC32`)
+  - Attributes: `length`=`Num SF2`, `vercond`=`#BS_GTE_152#`
+- **UV Offset** (`TexCoord`)
+  - Offset UVs
+- **UV Scale** (`TexCoord`)
+  - Attributes: `default`=`#VEC2_ONE#`
+  - Offset UV Scale to repeat tiling textures, see above.
+- **Texture Set** (`Ref`)
+  - Attributes: `template`=`BSShaderTextureSet`
+  - Texture Set, can have override in an esm/esp
+- **Emissive Color** (`Color3`)
+  - Attributes: `default`=`#VEC3_ZERO#`
+  - Glow color and alpha
+- **Emissive Multiple** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`#F0_10#`
+  - Multiplied emissive colors
+- **Root Material** (`NiFixedString`)
+  - Attributes: `vercond`=`#BS_GTE_130#`
+- **Texture Clamp Mode** (`TexClampMode`)
+  - Attributes: `default`=`WRAP_S_WRAP_T`
+  - How to handle texture borders.
+- **Alpha** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`0.0:128.0`
+  - The material opacity (1=opaque). Greater than 1.0 is used to affect alpha falloff i.e. staying opaque longer based on vertex alpha and alpha mask.
+- **Refraction Strength** (`float`)
+  - Attributes: `range`=`#F0_1#`
+  - The amount of distortion. **Not based on physically accurate refractive index** (0=none)
+- **Glossiness** (`float`)
+  - Attributes: `default`=`80.0`, `range`=`#F0_999#`, `vercond`=`#NI_BS_LT_FO4#`
+  - The material specular power, or glossiness.
+- **Smoothness** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`#F0_1#`, `vercond`=`#BS_GTE_130#`
+  - The base roughness, multiplied by the smoothness map.
+- **Specular Color** (`Color3`)
+  - Attributes: `default`=`#VEC3_ONE#`
+  - Adds a colored highlight.
+- **Specular Strength** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`#F0_10#`
+  - Brightness of specular highlight. (0=not visible)
+- **Lighting Effect 1** (`float`)
+  - Attributes: `default`=`0.3`, `range`=`#F0_10#`, `vercond`=`#NI_BS_LT_FO4#`
+  - Controls strength for envmap/backlight/rim/softlight lighting effect?
+- **Lighting Effect 2** (`float`)
+  - Attributes: `default`=`2.0`, `range`=`#F0_1000#`, `vercond`=`#NI_BS_LT_FO4#`
+  - Controls strength for envmap/backlight/rim/softlight lighting effect?
+- **Subsurface Rolloff** (`float`)
+  - Attributes: `default`=`0.0`, `range`=`#F0_10#`, `vercond`=`#BS_FO4_2#`
+- **Rimlight Power** (`float`)
+  - Attributes: `default`=`#FLT_MAX#`, `vercond`=`#BS_FO4_2#`
+- **Backlight Power** (`float`)
+  - Attributes: `cond`=`(Rimlight Power #GTE# #FLT_MAX#) #AND# (Rimlight Power #LT# #FLT_INF#)`, `range`=`#F0_1000#`, `vercond`=`#BS_FO4_2#`
+- **Grayscale to Palette Scale** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`#F0_1#`, `vercond`=`#BS_GTE_130#`
+- **Fresnel Power** (`float`)
+  - Attributes: `default`=`5.0`, `range`=`#F_PNZ#`, `vercond`=`#BS_GTE_130#`
+- **Wetness** (`BSSPWetnessParams`)
+  - Attributes: `vercond`=`#BS_GTE_130#`
+- **Luminance** (`BSSPLuminanceParams`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Do Translucency** (`bool`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Translucency** (`BSSPTranslucencyParams`)
+  - Attributes: `cond`=`Do Translucency`, `vercond`=`#BS_F76#`
+- **Has Texture Arrays** (`byte`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Num Texture Arrays** (`uint`)
+  - Attributes: `cond`=`Has Texture Arrays`, `vercond`=`#BS_F76#`
+- **Texture Arrays** (`BSTextureArray`)
+  - Attributes: `cond`=`Has Texture Arrays`, `length`=`Num Texture Arrays`, `vercond`=`#BS_F76#`
+- **Environment Map Scale** (`float`)
+  - Attributes: `cond`=`Shader Type == 1`, `default`=`1.0`, `range`=`#F0_10#`, `vercond`=`#NI_BS_LTE_FO4#`
+  - Scales the intensity of the environment/cube map.
+- **Use Screen Space Reflections** (`bool`)
+  - Attributes: `cond`=`Shader Type == 1`, `vercond`=`#BS_FO4_2#`
+- **Wetness Control: Use SSR** (`bool`)
+  - Attributes: `cond`=`Shader Type == 1`, `vercond`=`#BS_FO4_2#`
+- **Skin Tint Color** (`Color4`)
+  - Attributes: `cond`=`Shader Type == 4`, `vercond`=`#BS_F76#`
+- **Hair Tint Color** (`Color3`)
+  - Attributes: `cond`=`Shader Type == 5`, `vercond`=`#BS_F76#`
+- **Skin Tint Color** (`Color3`)
+  - Attributes: `cond`=`Shader Type == 5`, `default`=`#VEC3_ONE#`, `vercond`=`#NI_BS_LTE_FO4#`
+  - Tints the base texture. Overridden by game settings.
+- **Skin Tint Alpha** (`float`)
+  - Attributes: `cond`=`Shader Type == 5`, `default`=`1.0`, `vercond`=`#BS_FO4_2#`
+- **Hair Tint Color** (`Color3`)
+  - Attributes: `cond`=`Shader Type == 6`, `default`=`#VEC3_ONE#`, `vercond`=`#NI_BS_LTE_FO4#`
+  - Tints the base texture. Overridden by game settings.
+- **Max Passes** (`float`)
+  - Attributes: `cond`=`Shader Type == 7`, `default`=`4.0`, `range`=`1.0:320.0`
+- **Scale** (`float`)
+  - Attributes: `cond`=`Shader Type == 7`, `default`=`1.0`, `range`=`#F0_10#`
+- **Parallax Inner Layer Thickness** (`float`)
+  - Attributes: `cond`=`Shader Type == 11`, `default`=`5.0`, `range`=`5.0:500.0`
+  - How far from the surface the inner layer appears to be.
+- **Parallax Refraction Scale** (`float`)
+  - Attributes: `cond`=`Shader Type == 11`, `default`=`0.25`, `range`=`#F0_1#`
+  - Depth of inner parallax layer effect.
+- **Parallax Inner Layer Texture Scale** (`TexCoord`)
+  - Attributes: `cond`=`Shader Type == 11`
+  - Scales the inner parallax layer texture.
+- **Parallax Envmap Strength** (`float`)
+  - Attributes: `cond`=`Shader Type == 11`, `default`=`1.0`, `range`=`#F0_10#`
+  - How strong the environment/cube map is.
+- **Sparkle Parameters** (`Vector4`)
+  - Attributes: `cond`=`Shader Type == 14`
+  - CK lists "snow material" when used.
+- **Eye Cubemap Scale** (`float`)
+  - Attributes: `cond`=`Shader Type == 16`, `default`=`1.3`, `range`=`#F0_10#`
+  - Eye cubemap scale
+- **Left Eye Reflection Center** (`Vector3`)
+  - Attributes: `cond`=`Shader Type == 16`
+  - Offset to set center for left eye cubemap
+- **Right Eye Reflection Center** (`Vector3`)
+  - Attributes: `cond`=`Shader Type == 16`
+  - Offset to set center for right eye cubemap
+

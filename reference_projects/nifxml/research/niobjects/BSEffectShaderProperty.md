@@ -1,0 +1,86 @@
+# Niobject `BSEffectShaderProperty`
+
+Bethesda effect shader property for Skyrim and later.
+
+## Attributes
+- **inherit**: `BSShaderProperty`
+- **module**: `BSMain`
+- **name**: `BSEffectShaderProperty`
+- **stopcond**: `#BSVER# #GTE# 155 #AND# Name`
+- **versions**: `#SKY_AND_LATER#`
+
+## Fields
+- **Shader Flags 1** (`SkyrimShaderPropertyFlags1`)
+  - Attributes: `default`=`0x80000000`, `suffix`=`SK`, `vercond`=`#NI_BS_LT_FO4#`
+- **Shader Flags 2** (`SkyrimShaderPropertyFlags2`)
+  - Attributes: `default`=`0x20`, `suffix`=`SK`, `vercond`=`#NI_BS_LT_FO4#`
+- **Shader Flags 1** (`Fallout4ShaderPropertyFlags1`)
+  - Attributes: `default`=`0x80000000`, `suffix`=`FO4`, `vercond`=`#BS_FO4#`
+- **Shader Flags 2** (`Fallout4ShaderPropertyFlags2`)
+  - Attributes: `default`=`0x20`, `suffix`=`FO4`, `vercond`=`#BS_FO4#`
+- **Num SF1** (`uint`)
+  - Attributes: `vercond`=`#BS_GTE_132#`
+- **Num SF2** (`uint`)
+  - Attributes: `vercond`=`#BS_GTE_152#`
+- **SF1** (`BSShaderCRC32`)
+  - Attributes: `length`=`Num SF1`, `vercond`=`#BS_GTE_132#`
+- **SF2** (`BSShaderCRC32`)
+  - Attributes: `length`=`Num SF2`, `vercond`=`#BS_GTE_152#`
+- **UV Offset** (`TexCoord`)
+  - Offset UVs
+- **UV Scale** (`TexCoord`)
+  - Attributes: `default`=`#VEC2_ONE#`
+  - Offset UV Scale to repeat tiling textures
+- **Source Texture** (`SizedString`)
+  - points to an external texture.
+- **Texture Clamp Mode** (`byte`)
+  - Attributes: `default`=`3`
+  - How to handle texture borders.
+- **Lighting Influence** (`byte`)
+  - Attributes: `default`=`255`
+- **Env Map Min LOD** (`byte`)
+  - Attributes: `range`=`0:16`
+- **Unused Byte** (`byte`)
+- **Falloff Start Angle** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`#F_NRM#`
+  - At this cosine of angle falloff will be equal to Falloff Start Opacity
+- **Falloff Stop Angle** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`#F_NRM#`
+  - At this cosine of angle falloff will be equal to Falloff Stop Opacity
+- **Falloff Start Opacity** (`float`)
+  - Attributes: `range`=`#F0_1#`
+  - Alpha falloff multiplier at start angle
+- **Falloff Stop Opacity** (`float`)
+  - Attributes: `range`=`#F0_1#`
+  - Alpha falloff multiplier at end angle
+- **Refraction Power** (`float`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Base Color** (`Color4`)
+  - Attributes: `default`=`#VEC4_ONE#`
+  - Base color
+- **Base Color Scale** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`0.0:360.0`
+  - Multiplier for Base Color (RGB part)
+- **Soft Falloff Depth** (`float`)
+  - Attributes: `default`=`100.0`, `range`=`0.0:9999.0`
+- **Greyscale Texture** (`SizedString`)
+  - Points to an external texture, used as palette for SLSF1_Greyscale_To_PaletteColor/SLSF1_Greyscale_To_PaletteAlpha.
+- **Env Map Texture** (`SizedString`)
+  - Attributes: `vercond`=`#BS_GTE_130#`
+- **Normal Texture** (`SizedString`)
+  - Attributes: `vercond`=`#BS_GTE_130#`
+- **Env Mask Texture** (`SizedString`)
+  - Attributes: `vercond`=`#BS_GTE_130#`
+- **Environment Map Scale** (`float`)
+  - Attributes: `default`=`1.0`, `range`=`0.01:20.0`, `vercond`=`#BS_GTE_130#`
+- **Reflectance Texture** (`SizedString`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Lighting Texture** (`SizedString`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Emittance Color** (`Color3`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Emit Gradient Texture** (`SizedString`)
+  - Attributes: `vercond`=`#BS_F76#`
+- **Luminance** (`BSSPLuminanceParams`)
+  - Attributes: `vercond`=`#BS_F76#`
+

@@ -1,0 +1,105 @@
+# Enum `BSDismemberBodyPartType`
+
+Biped bodypart data used for visibility control of triangles.  Options are Fallout 3, except where marked for Skyrim (uses SBP prefix)
+Skyrim BP names are listed only for vanilla names, different creatures have different defnitions for naming.
+
+## Attributes
+- **name**: `BSDismemberBodyPartType`
+- **storage**: `ushort`
+- **versions**: `#BETHESDA#`
+
+## Values
+- `option` `BP_TORSO` (`value`=`0`) – Torso
+- `option` `BP_HEAD` (`value`=`1`) – Head
+- `option` `BP_HEAD2` (`value`=`2`) – Head 2
+- `option` `BP_LEFTARM` (`value`=`3`) – Left Arm
+- `option` `BP_LEFTARM2` (`value`=`4`) – Left Arm 2
+- `option` `BP_RIGHTARM` (`value`=`5`) – Right Arm
+- `option` `BP_RIGHTARM2` (`value`=`6`) – Right Arm 2
+- `option` `BP_LEFTLEG` (`value`=`7`) – Left Leg
+- `option` `BP_LEFTLEG2` (`value`=`8`) – Left Leg 2
+- `option` `BP_LEFTLEG3` (`value`=`9`) – Left Leg 3
+- `option` `BP_RIGHTLEG` (`value`=`10`) – Right Leg
+- `option` `BP_RIGHTLEG2` (`value`=`11`) – Right Leg 2
+- `option` `BP_RIGHTLEG3` (`value`=`12`) – Right Leg 3
+- `option` `BP_BRAIN` (`value`=`13`) – Brain
+- `option` `SBP_30_HEAD` (`value`=`30`) – Skyrim, Head(Human), Body(Atronachs,Beasts), Mask(Dragonpriest)
+- `option` `SBP_31_HAIR` (`value`=`31`) – Skyrim, Hair(human), Far(Dragon), Mask2(Dragonpriest),SkinnedFX(Spriggan)
+- `option` `SBP_32_BODY` (`value`=`32`) – Skyrim, Main body, extras(Spriggan)
+- `option` `SBP_33_HANDS` (`value`=`33`) – Skyrim, Hands L/R, BodyToo(Dragonpriest), Legs(Draugr), Arms(Giant)
+- `option` `SBP_34_FOREARMS` (`value`=`34`) – Skyrim, Forearms L/R, Beard(Draugr)
+- `option` `SBP_35_AMULET` (`value`=`35`) – Skyrim, Amulet
+- `option` `SBP_36_RING` (`value`=`36`) – Skyrim, Ring
+- `option` `SBP_37_FEET` (`value`=`37`) – Skyrim, Feet L/R
+- `option` `SBP_38_CALVES` (`value`=`38`) – Skyrim, Calves L/R
+- `option` `SBP_39_SHIELD` (`value`=`39`) – Skyrim, Shield
+- `option` `SBP_40_TAIL` (`value`=`40`) – Skyrim, Tail(Argonian/Khajiit), Skeleton01(Dragon), FX01(AtronachStorm),FXMist (Dragonpriest), Spit(Chaurus,Spider),SmokeFins(IceWraith)
+- `option` `SBP_41_LONGHAIR` (`value`=`41`) – Skyrim, Long Hair(Human), Skeleton02(Dragon),FXParticles(Dragonpriest)
+- `option` `SBP_42_CIRCLET` (`value`=`42`) – Skyrim, Circlet(Human, MouthFireEffect(Dragon)
+- `option` `SBP_43_EARS` (`value`=`43`) – Skyrim, Ears
+- `option` `SBP_44_DRAGON_BLOODHEAD_OR_MOD_MOUTH` (`value`=`44`) – Skyrim, Bloodied dragon head, or NPC face/mouth
+- `option` `SBP_45_DRAGON_BLOODWINGL_OR_MOD_NECK` (`value`=`45`) – Skyrim, Left Bloodied dragon wing, Saddle(Horse), or NPC cape, scarf, shawl, neck-tie, etc.
+- `option` `SBP_46_DRAGON_BLOODWINGR_OR_MOD_CHEST_PRIMARY` (`value`=`46`) – Skyrim, Right Bloodied dragon wing, or NPC chest primary or outergarment
+- `option` `SBP_47_DRAGON_BLOODTAIL_OR_MOD_BACK` (`value`=`47`) – Skyrim, Bloodied dragon tail, or NPC backpack/wings/...
+- `option` `SBP_48_MOD_MISC1` (`value`=`48`) – Anything that does not fit in the list
+- `option` `SBP_49_MOD_PELVIS_PRIMARY` (`value`=`49`) – Pelvis primary or outergarment
+- `option` `SBP_50_DECAPITATEDHEAD` (`value`=`50`) – Skyrim, Decapitated Head
+- `option` `SBP_51_DECAPITATE` (`value`=`51`) – Skyrim, Decapitate, neck gore
+- `option` `SBP_52_MOD_PELVIS_SECONDARY` (`value`=`52`) – Pelvis secondary or undergarment
+- `option` `SBP_53_MOD_LEG_RIGHT` (`value`=`53`) – Leg primary or outergarment or right leg
+- `option` `SBP_54_MOD_LEG_LEFT` (`value`=`54`) – Leg secondary or undergarment or left leg
+- `option` `SBP_55_MOD_FACE_JEWELRY` (`value`=`55`) – Face alternate or jewelry
+- `option` `SBP_56_MOD_CHEST_SECONDARY` (`value`=`56`) – Chest secondary or undergarment
+- `option` `SBP_57_MOD_SHOULDER` (`value`=`57`) – Shoulder
+- `option` `SBP_58_MOD_ARM_LEFT` (`value`=`58`) – Arm secondary or undergarment or left arm
+- `option` `SBP_59_MOD_ARM_RIGHT` (`value`=`59`) – Arm primary or outergarment or right arm
+- `option` `SBP_60_MOD_MISC2` (`value`=`60`) – Anything that does not fit in the list
+- `option` `SBP_61_FX01` (`value`=`61`) – Skyrim, FX01(Humanoid)
+- `option` `BP_SECTIONCAP_HEAD` (`value`=`101`) – Section Cap | Head
+- `option` `BP_SECTIONCAP_HEAD2` (`value`=`102`) – Section Cap | Head 2
+- `option` `BP_SECTIONCAP_LEFTARM` (`value`=`103`) – Section Cap | Left Arm
+- `option` `BP_SECTIONCAP_LEFTARM2` (`value`=`104`) – Section Cap | Left Arm 2
+- `option` `BP_SECTIONCAP_RIGHTARM` (`value`=`105`) – Section Cap | Right Arm
+- `option` `BP_SECTIONCAP_RIGHTARM2` (`value`=`106`) – Section Cap | Right Arm 2
+- `option` `BP_SECTIONCAP_LEFTLEG` (`value`=`107`) – Section Cap | Left Leg
+- `option` `BP_SECTIONCAP_LEFTLEG2` (`value`=`108`) – Section Cap | Left Leg 2
+- `option` `BP_SECTIONCAP_LEFTLEG3` (`value`=`109`) – Section Cap | Left Leg 3
+- `option` `BP_SECTIONCAP_RIGHTLEG` (`value`=`110`) – Section Cap | Right Leg
+- `option` `BP_SECTIONCAP_RIGHTLEG2` (`value`=`111`) – Section Cap | Right Leg 2
+- `option` `BP_SECTIONCAP_RIGHTLEG3` (`value`=`112`) – Section Cap | Right Leg 3
+- `option` `BP_SECTIONCAP_BRAIN` (`value`=`113`) – Section Cap | Brain
+- `option` `SBP_130_HEAD` (`value`=`130`) – Skyrim, Head slot, use on full-face helmets
+- `option` `SBP_131_HAIR` (`value`=`131`) – Skyrim, Hair slot 1, use on hoods
+- `option` `SBP_132_HAIR` (`value`=`132`) – Skyrim, Hair slot 2?, use on hoods
+- `option` `SBP_141_LONGHAIR` (`value`=`141`) – Skyrim, Hair slot 2, use for longer hair
+- `option` `SBP_142_CIRCLET` (`value`=`142`) – Skyrim, Circlet slot 1, use for circlets
+- `option` `SBP_143_EARS` (`value`=`143`) – Skyrim, Ear slot
+- `option` `SBP_150_DECAPITATEDHEAD` (`value`=`150`) – Skyrim, neck gore on head side
+- `option` `BP_TORSOCAP_HEAD` (`value`=`201`) – Torso Cap | Head
+- `option` `BP_TORSOCAP_HEAD2` (`value`=`202`) – Torso Cap | Head 2
+- `option` `BP_TORSOCAP_LEFTARM` (`value`=`203`) – Torso Cap | Left Arm
+- `option` `BP_TORSOCAP_LEFTARM2` (`value`=`204`) – Torso Cap | Left Arm 2
+- `option` `BP_TORSOCAP_RIGHTARM` (`value`=`205`) – Torso Cap | Right Arm
+- `option` `BP_TORSOCAP_RIGHTARM2` (`value`=`206`) – Torso Cap | Right Arm 2
+- `option` `BP_TORSOCAP_LEFTLEG` (`value`=`207`) – Torso Cap | Left Leg
+- `option` `BP_TORSOCAP_LEFTLEG2` (`value`=`208`) – Torso Cap | Left Leg 2
+- `option` `BP_TORSOCAP_LEFTLEG3` (`value`=`209`) – Torso Cap | Left Leg 3
+- `option` `BP_TORSOCAP_RIGHTLEG` (`value`=`210`) – Torso Cap | Right Leg
+- `option` `BP_TORSOCAP_RIGHTLEG2` (`value`=`211`) – Torso Cap | Right Leg 2
+- `option` `BP_TORSOCAP_RIGHTLEG3` (`value`=`212`) – Torso Cap | Right Leg 3
+- `option` `BP_TORSOCAP_BRAIN` (`value`=`213`) – Torso Cap | Brain
+- `option` `SBP_230_HEAD` (`value`=`230`) – Skyrim, Head slot, use for neck on character head
+- `option` `BP_TORSOSECTION_HEAD` (`value`=`1000`) – Torso Section | Head
+- `option` `BP_TORSOSECTION_HEAD2` (`value`=`2000`) – Torso Section | Head 2
+- `option` `BP_TORSOSECTION_LEFTARM` (`value`=`3000`) – Torso Section | Left Arm
+- `option` `BP_TORSOSECTION_LEFTARM2` (`value`=`4000`) – Torso Section | Left Arm 2
+- `option` `BP_TORSOSECTION_RIGHTARM` (`value`=`5000`) – Torso Section | Right Arm
+- `option` `BP_TORSOSECTION_RIGHTARM2` (`value`=`6000`) – Torso Section | Right Arm 2
+- `option` `BP_TORSOSECTION_LEFTLEG` (`value`=`7000`) – Torso Section | Left Leg
+- `option` `BP_TORSOSECTION_LEFTLEG2` (`value`=`8000`) – Torso Section | Left Leg 2
+- `option` `BP_TORSOSECTION_LEFTLEG3` (`value`=`9000`) – Torso Section | Left Leg 3
+- `option` `BP_TORSOSECTION_RIGHTLEG` (`value`=`10000`) – Torso Section | Right Leg
+- `option` `BP_TORSOSECTION_RIGHTLEG2` (`value`=`11000`) – Torso Section | Right Leg 2
+- `option` `BP_TORSOSECTION_RIGHTLEG3` (`value`=`12000`) – Torso Section | Right Leg 3
+- `option` `BP_TORSOSECTION_BRAIN` (`value`=`13000`) – Torso Section | Brain
+

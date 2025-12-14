@@ -1,0 +1,86 @@
+# Niobject `NiTexturingProperty`
+
+Describes how a fragment shader should be configured for a given piece of geometry.
+
+## Attributes
+- **inherit**: `NiProperty`
+- **module**: `NiMain`
+- **name**: `NiTexturingProperty`
+
+## Fields
+- **Flags** (`ushort`)
+  - Attributes: `until`=`10.0.1.2`
+  - Property flags.
+- **Flags** (`TexturingFlags`)
+  - Attributes: `since`=`20.1.0.2`
+  - Property flags.
+- **Apply Mode** (`ApplyMode`)
+  - Attributes: `default`=`APPLY_MODULATE`, `since`=`3.3.0.13`, `until`=`20.1.0.1`
+  - Determines how the texture will be applied.  Seems to have special functions in Oblivion.
+- **Texture Count** (`uint`)
+  - Attributes: `default`=`7`
+  - Number of textures.
+- **Has Base Texture** (`bool`)
+- **Base Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Base Texture`
+- **Has Dark Texture** (`bool`)
+- **Dark Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Dark Texture`
+- **Has Detail Texture** (`bool`)
+- **Detail Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Detail Texture`
+- **Has Gloss Texture** (`bool`)
+- **Gloss Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Gloss Texture`
+- **Has Glow Texture** (`bool`)
+- **Glow Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Glow Texture`
+- **Has Bump Map Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 5`, `since`=`3.3.0.13`
+- **Bump Map Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Bump Map Texture`, `since`=`3.3.0.13`
+- **Bump Map Luma Scale** (`float`)
+  - Attributes: `cond`=`Has Bump Map Texture`, `since`=`3.3.0.13`
+- **Bump Map Luma Offset** (`float`)
+  - Attributes: `cond`=`Has Bump Map Texture`, `since`=`3.3.0.13`
+- **Bump Map Matrix** (`Matrix22`)
+  - Attributes: `cond`=`Has Bump Map Texture`, `since`=`3.3.0.13`
+- **Has Normal Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 6`, `since`=`20.2.0.5`
+- **Normal Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Normal Texture`, `since`=`20.2.0.5`
+- **Has Parallax Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 7`, `since`=`20.2.0.5`
+- **Parallax Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Parallax Texture`, `since`=`20.2.0.5`
+- **Parallax Offset** (`float`)
+  - Attributes: `cond`=`Has Parallax Texture`, `since`=`20.2.0.5`
+- **Has Decal 0 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 6`, `until`=`20.2.0.4`
+- **Has Decal 0 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 8`, `since`=`20.2.0.5`
+- **Decal 0 Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Decal 0 Texture`
+- **Has Decal 1 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 7`, `until`=`20.2.0.4`
+- **Has Decal 1 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 9`, `since`=`20.2.0.5`
+- **Decal 1 Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Decal 1 Texture`
+- **Has Decal 2 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 8`, `until`=`20.2.0.4`
+- **Has Decal 2 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 10`, `since`=`20.2.0.5`
+- **Decal 2 Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Decal 2 Texture`
+- **Has Decal 3 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 9`, `until`=`20.2.0.4`
+- **Has Decal 3 Texture** (`bool`)
+  - Attributes: `cond`=`Texture Count #GT# 11`, `since`=`20.2.0.5`
+- **Decal 3 Texture** (`TexDesc`)
+  - Attributes: `cond`=`Has Decal 3 Texture`
+- **Num Shader Textures** (`uint`)
+  - Attributes: `since`=`10.0.1.0`
+- **Shader Textures** (`ShaderTexDesc`)
+  - Attributes: `length`=`Num Shader Textures`, `since`=`10.0.1.0`
+

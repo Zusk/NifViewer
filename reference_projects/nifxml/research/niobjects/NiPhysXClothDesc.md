@@ -1,0 +1,86 @@
+# Niobject `NiPhysXClothDesc`
+
+For serializing NxClothDesc objects.
+
+## Attributes
+- **inherit**: `NiObject`
+- **module**: `NiPhysX`
+- **name**: `NiPhysXClothDesc`
+- **since**: `V20_2_0_8`
+
+## Fields
+- **Name** (`NiFixedString`)
+- **Mesh** (`Ref`)
+  - Attributes: `template`=`NiPhysXMeshDesc`
+- **Pose** (`Matrix34`)
+  - Attributes: `until`=`20.3.0.9`
+- **Thickness** (`float`)
+  - Attributes: `default`=`0.01`
+- **Self Collision Thickness** (`float`)
+  - Attributes: `since`=`30.1.0.3`
+- **Density** (`float`)
+  - Attributes: `default`=`1.0`
+- **Bending Stiffness** (`float`)
+  - Attributes: `default`=`1.0`
+- **Stretching Stiffness** (`float`)
+  - Attributes: `default`=`1.0`
+- **Damping Coefficient** (`float`)
+  - Attributes: `default`=`0.5`
+- **Hard Stretch Limitation Factor** (`float`)
+  - Attributes: `since`=`30.1.0.3`
+- **Friction** (`float`)
+  - Attributes: `default`=`0.5`
+- **Pressure** (`float`)
+  - Attributes: `default`=`1.0`
+- **Tear Factor** (`float`)
+  - Attributes: `default`=`1.5`
+- **Collision Response Coeff** (`float`)
+  - Attributes: `default`=`0.2`
+- **Attach Response Coeff** (`float`)
+  - Attributes: `default`=`0.2`
+- **Attach Tear Factor** (`float`)
+  - Attributes: `default`=`1.5`
+- **To Fluid Response Coeff** (`float`)
+  - Attributes: `default`=`1.0`, `since`=`20.4.0.0`
+- **From Fluid Response Coeff** (`float`)
+  - Attributes: `default`=`1.0`, `since`=`20.4.0.0`
+- **Min Adhere Velocity** (`float`)
+  - Attributes: `default`=`1.0`, `since`=`20.4.0.0`
+- **Relative Grid Spacing** (`float`)
+  - Attributes: `default`=`0.25`, `since`=`20.4.0.0`
+- **Solver Iterations** (`uint`)
+  - Attributes: `default`=`5`
+- **Hier Solver Iterations** (`uint`)
+  - Attributes: `since`=`30.1.0.3`
+- **External Acceleration** (`Vector3`)
+- **Wind Acceleration** (`Vector3`)
+  - Attributes: `since`=`20.4.0.0`
+- **Wake Up Counter** (`float`)
+  - Attributes: `default`=`0.4`
+- **Sleep Linear Velocity** (`float`)
+  - Attributes: `default`=`-1.0`
+- **Collision Group** (`ushort`)
+- **Collision Bits** (`uint`)
+  - Attributes: `length`=`4`
+- **Force Field Material** (`ushort`)
+  - Attributes: `since`=`20.4.0.0`
+- **Flags** (`NxClothFlag`)
+  - Attributes: `default`=`0x20`
+- **Vertex Map Size** (`ushort`)
+  - Attributes: `since`=`30.2.0.3`
+- **Vertex Map** (`ushort`)
+  - Attributes: `length`=`Vertex Map Size`, `since`=`30.2.0.3`
+- **Num States** (`uint`)
+  - Attributes: `since`=`20.4.0.0`
+- **States** (`PhysXClothState`)
+  - Attributes: `length`=`Num States`, `since`=`20.4.0.0`
+- **Num Attachments** (`uint`)
+- **Attachments** (`PhysXClothAttachment`)
+  - Attributes: `length`=`Num Attachments`
+- **Parent Actor** (`Ref`)
+  - Attributes: `template`=`NiPhysXActorDesc`
+- **Dest** (`Ref`)
+  - Attributes: `template`=`NiPhysXDest`, `until`=`20.4.0.9`
+- **Target Mesh** (`Ref`)
+  - Attributes: `since`=`20.5.0.0`, `template`=`NiMesh`, `until`=`20.5.0.0`
+

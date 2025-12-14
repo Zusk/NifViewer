@@ -1,0 +1,109 @@
+# Niobject `NiPhysXSceneDesc`
+
+Object which caches the properties of NxScene, stored as a snapshot in a NiPhysXScene.
+
+## Attributes
+- **inherit**: `NiObject`
+- **module**: `NiPhysX`
+- **name**: `NiPhysXSceneDesc`
+- **since**: `V20_2_0_8`
+
+## Fields
+- **Broad Phase Type** (`NiSceneDescNxBroadPhaseType`)
+  - Attributes: `until`=`20.2.0.7`
+- **Gravity** (`Vector3`)
+- **Max Timestep** (`float`)
+  - Attributes: `default`=`0.016666`
+- **Max Iterations** (`uint`)
+  - Attributes: `default`=`8`
+- **Time Step Method** (`NxTimeStepMethod`)
+  - Attributes: `default`=`TIMESTEP_FIXED`
+- **Has Bound** (`bool`)
+- **Max Bounds Min** (`Vector3`)
+  - Attributes: `cond`=`Has Bound`
+- **Max Bounds Max** (`Vector3`)
+  - Attributes: `cond`=`Has Bound`
+- **Has Limits** (`bool`)
+- **Max Actors** (`uint`)
+  - Attributes: `cond`=`Has Limits`
+- **Max Bodies** (`uint`)
+  - Attributes: `cond`=`Has Limits`
+- **Max Static Shapes** (`uint`)
+  - Attributes: `cond`=`Has Limits`
+- **Max Dynamic Shapes** (`uint`)
+  - Attributes: `cond`=`Has Limits`
+- **Simulation Type** (`NxSimulationType`)
+  - Attributes: `default`=`SIMULATION_SW`
+- **HW Scene Type** (`NiSceneDescNxHwSceneType`)
+  - Attributes: `until`=`20.2.0.8`
+- **HW Pipeline Spec** (`NiSceneDescNxHwPipelineSpec`)
+  - Attributes: `until`=`20.2.0.8`
+- **Ground Plane** (`bool`)
+- **Bounds Plane** (`bool`)
+- **Collision Detection** (`bool`)
+  - Attributes: `until`=`20.2.0.7`
+- **Flags** (`uint`)
+  - Attributes: `since`=`20.2.0.8`
+- **Internal Thread Count** (`uint`)
+  - Attributes: `since`=`20.2.0.8`
+- **Background Thread Count** (`uint`)
+  - Attributes: `since`=`20.2.0.8`
+- **Thread Mask** (`uint`)
+  - Attributes: `since`=`20.2.0.8`
+- **Background Thread Priority** (`uint`)
+  - Attributes: `since`=`20.5.0.3`
+- **Background Thread Mask** (`uint`)
+  - Attributes: `since`=`20.2.0.8`
+- **Num HW Scenes** (`uint`)
+  - Attributes: `since`=`20.3.0.1`, `until`=`20.3.0.5`
+- **Sim Thread Stack Size** (`uint`)
+  - Attributes: `since`=`20.3.0.1`
+- **Sim Thread Priority** (`NxThreadPriority`)
+  - Attributes: `default`=`TP_NORMAL`, `since`=`20.3.0.1`
+- **Worker Thread Stack Size** (`uint`)
+  - Attributes: `since`=`20.3.0.1`
+- **Worker Thread Priority** (`NxThreadPriority`)
+  - Attributes: `default`=`TP_NORMAL`, `since`=`20.3.0.1`
+- **Up Axis** (`uint`)
+  - Attributes: `since`=`20.3.0.1`
+- **Subdivision Level** (`uint`)
+  - Attributes: `default`=`5`, `since`=`20.3.0.1`
+- **Static Structure** (`NxPruningStructure`)
+  - Attributes: `default`=`PRUNING_NONE`, `since`=`20.3.0.1`
+- **Dynamic Structure** (`NxPruningStructure`)
+  - Attributes: `default`=`PRUNING_STATIC_AABB_TREE`, `since`=`20.3.0.1`
+- **Dynamic Tree Rebuild Rate Hint** (`uint`)
+  - Attributes: `since`=`20.5.0.3`
+- **Broad Phase Type** (`NxBroadPhaseType`)
+  - Attributes: `since`=`20.4.0.0`
+- **Grid Cells X** (`uint`)
+  - Attributes: `since`=`20.4.0.0`
+- **Grid Cells Y** (`uint`)
+  - Attributes: `since`=`20.4.0.0`
+- **Num Actors** (`uint`)
+  - Attributes: `until`=`20.3.0.1`
+- **Actors** (`Ref`)
+  - Attributes: `length`=`Num Actors`, `template`=`NiPhysXActorDesc`, `until`=`20.3.0.1`
+- **Num Joints** (`uint`)
+  - Attributes: `until`=`20.3.0.1`
+- **Joints** (`Ref`)
+  - Attributes: `length`=`Num Joints`, `template`=`NiPhysXJointDesc`, `until`=`20.3.0.1`
+- **Num Materials** (`uint`)
+  - Attributes: `until`=`20.3.0.1`
+- **Materials** (`NiPhysXMaterialDescMap`)
+  - Attributes: `length`=`Num Materials`, `until`=`20.3.0.1`
+- **Group Collision Flags** (`bool`)
+  - Attributes: `length`=`1024`
+- **Filter Ops** (`NxFilterOp`)
+  - Attributes: `length`=`3`
+- **Filter Constants** (`uint`)
+  - Attributes: `length`=`8`
+- **Filter** (`bool`)
+  - Attributes: `default`=`true`
+- **Num States** (`uint`)
+  - Attributes: `until`=`20.3.0.1`
+- **Num Compartments** (`uint`)
+  - Attributes: `since`=`20.3.0.6`
+- **Compartments** (`NxCompartmentDescMap`)
+  - Attributes: `length`=`Num Compartments`, `since`=`20.3.0.6`
+

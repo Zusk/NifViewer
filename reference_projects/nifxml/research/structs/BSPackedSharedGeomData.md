@@ -1,0 +1,21 @@
+# Struct `BSPackedSharedGeomData`
+
+## Attributes
+- **module**: `BSMain`
+- **name**: `BSPackedSharedGeomData`
+- **versions**: `#FO4# #F76#`
+
+## Fields
+- **Num Verts** (`uint`)
+- **LOD Levels** (`uint`)
+- **Tri Count LOD0** (`uint`)
+- **Tri Offset LOD0** (`uint`)
+- **Tri Count LOD1** (`uint`)
+- **Tri Offset LOD1** (`uint`)
+- **Tri Count LOD2** (`uint`)
+- **Tri Offset LOD2** (`uint`)
+- **Num Combined** (`uint`)
+- **Combined** (`BSPackedGeomDataCombined`)
+  - Attributes: `length`=`Num Combined`
+- **Vertex Desc** (`BSVertexDesc`)
+
