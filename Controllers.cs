@@ -25,6 +25,8 @@ public sealed class NiControllerManager
             controller.Update(time, skeleton);
         }
     }
+
+    public int ControllerCount => _controllers.Count;
 }
 
 public interface INiController

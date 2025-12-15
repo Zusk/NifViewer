@@ -18,9 +18,15 @@ public sealed class AnimatedNifSceneObject : ISceneObject
     private readonly Dictionary<int, NodeInfo> _nodeLookup;
     private readonly Dictionary<int, GeometryBlockInfo> _geometryLookup;
     private readonly Dictionary<int, int> _nodeParents;
+    private readonly bool _verboseLogging;
+    private readonly Model _debugMarker;
     private float _elapsedTime;
+    private float _verboseTimer;
+    private Dictionary<int, TransformData>? _debugRuntimeTransforms;
+    private const float VerboseIntervalSeconds = 1f;
+    private const float MarkerScale = 0.2f;
 
-    private AnimatedNifSceneObject(NifScene scene, string modelDirectory)
+    private AnimatedNifSceneObject(NifScene scene, string modelDirectory, bool verboseLogging)
     {
         _scene = scene;
         _skeleton = new Skeleton(scene);
@@ -29,6 +35,8 @@ public sealed class AnimatedNifSceneObject : ISceneObject
         _nodeLookup = scene.Nodes.ToDictionary(node => node.BlockIndex);
         _geometryLookup = scene.GeometryBlocks.ToDictionary(block => block.BlockIndex);
         _nodeParents = BuildNodeParentMap(scene.Nodes);
+        _verboseLogging = verboseLogging;
+        _debugMarker = PrimitiveFactory.CreateMarkerCubeModel();
 
         // Add a demo controller while .kf loading is still pending.
         var spinBone = _skeleton.Bones.FirstOrDefault(b => !string.IsNullOrEmpty(b.Node.Name));
@@ -44,13 +52,13 @@ public sealed class AnimatedNifSceneObject : ISceneObject
         }
     }
 
-    public static AnimatedNifSceneObject Load(string nifPath, bool bakeTransforms, string? animationPath = null)
+    public static AnimatedNifSceneObject Load(string nifPath, bool bakeTransforms, string? animationPath = null, bool verboseLogging = false)
     {
         string resolvedPath = ResolvePath(nifPath);
         var loader = new Civ4NifLoader();
         var scene = loader.LoadModel(resolvedPath, bakeTransforms: bakeTransforms);
         Console.WriteLine($"[INFO] Loaded animated NIF model \"{Path.GetFileName(resolvedPath)}\" ({scene.Model.Meshes.Count} mesh(es), {scene.SkinInstances.Count} skin instance(s))");
-        var obj = new AnimatedNifSceneObject(scene, Path.GetDirectoryName(resolvedPath) ?? string.Empty);
+        var obj = new AnimatedNifSceneObject(scene, Path.GetDirectoryName(resolvedPath) ?? string.Empty, verboseLogging);
         obj.TryAutoLoadAnimations(animationPath);
         return obj;
     }
@@ -59,6 +67,8 @@ public sealed class AnimatedNifSceneObject : ISceneObject
     {
         _elapsedTime += deltaTime;
         _controllerManager.Update(_elapsedTime, _skeleton);
+        if (_verboseLogging)
+            _verboseTimer += deltaTime;
     }
 
     public void Render(Shader shader, Matrix4 view, Matrix4 proj)
@@ -72,11 +82,21 @@ public sealed class AnimatedNifSceneObject : ISceneObject
         shader.SetMatrix4("uProj", ref proj);
 
         var blockTransforms = ComputeGeometryTransforms();
-        _scene.Model.Draw(shader, blockTransforms, baseModel);
+        var (centeredTransforms, geometryCenter) = CenterGeometryTransforms(blockTransforms);
+        if (_verboseLogging && _verboseTimer >= VerboseIntervalSeconds)
+        {
+            LogVerbose(blockTransforms, geometryCenter);
+            _verboseTimer -= VerboseIntervalSeconds;
+            if (_verboseTimer < 0f)
+                _verboseTimer = 0f;
+        }
+        _scene.Model.Draw(shader, centeredTransforms, baseModel);
+        DrawDebugMarkers(shader, blockTransforms, geometryCenter, baseModel);
     }
 
     public void Dispose()
     {
+        _debugMarker.Dispose();
         _scene.Model.Dispose();
     }
 
@@ -269,6 +289,69 @@ public sealed class AnimatedNifSceneObject : ISceneObject
         return parentMap;
     }
 
+    private void LogVerbose(IReadOnlyList<TransformData> geometryTransforms, Vector3 geometryCenter)
+    {
+        int runtimeNodeCount = _debugRuntimeTransforms?.Count ?? 0;
+        float minNodeScale = float.MaxValue;
+        float maxNodeScale = float.MinValue;
+        float sumNodeScale = 0f;
+        int zeroNodeCount = 0;
+
+        if (_debugRuntimeTransforms != null && runtimeNodeCount > 0)
+        {
+            foreach (var transform in _debugRuntimeTransforms.Values)
+            {
+                float scale = transform.Scale;
+                minNodeScale = Math.Min(minNodeScale, scale);
+                maxNodeScale = Math.Max(maxNodeScale, scale);
+                sumNodeScale += scale;
+                if (scale <= 0f)
+                    zeroNodeCount++;
+            }
+        }
+
+        if (runtimeNodeCount == 0)
+        {
+            minNodeScale = 0f;
+            maxNodeScale = 0f;
+        }
+
+        float avgNodeScale = runtimeNodeCount > 0 ? sumNodeScale / runtimeNodeCount : 0f;
+        int zeroScaleBlocks = geometryTransforms.Count(t => t.Scale <= 0f);
+        int totalBlocks = geometryTransforms.Count;
+
+        Console.WriteLine($"[VERBOSE] Nodes: {runtimeNodeCount}, Controllers: {_controllerManager.ControllerCount}, Meshes: {_scene.Model.Meshes.Count}, Skin instances: {_scene.SkinInstances.Count}");
+        Console.WriteLine($"[VERBOSE] Node scale range {minNodeScale:F3}..{maxNodeScale:F3} (avg {avgNodeScale:F3}), zero-scale nodes: {zeroNodeCount}");
+        Console.WriteLine($"[VERBOSE] Geometry blocks: {totalBlocks}, zero-scale blocks: {zeroScaleBlocks}");
+        Console.WriteLine($"[VERBOSE] Geometry center ≈ {FormatVector3(geometryCenter)}");
+
+        var meshDetails = geometryTransforms
+            .Select((transform, idx) =>
+            {
+                var block = _scene.GeometryBlocks[idx];
+                string type = block.HasSkin ? "skinned" : "static";
+                var translation = transform.Translation;
+                float distance = translation.Length;
+                return $"{block.BlockIndex}:scale={transform.Scale:F3},dist={distance:F3},{type}";
+            })
+            .Take(8);
+        Console.WriteLine($"[VERBOSE] Mesh detail heads (block:scale/dist/type) ≈ {string.Join(", ", meshDetails)}");
+        var farBlocks = geometryTransforms
+            .Select((transform, idx) => new { idx, transform })
+            .OrderByDescending(entry => entry.transform.Translation.LengthSquared)
+            .Take(4)
+            .Select(entry =>
+            {
+                var block = _scene.GeometryBlocks[entry.idx];
+                string translation = FormatVector3(entry.transform.Translation);
+                float distance = entry.transform.Translation.Length;
+                return $"{block.BlockIndex}:{translation},dist={distance:F2}";
+            })
+            .ToList();
+        if (farBlocks.Count > 0)
+            Console.WriteLine($"[VERBOSE] Far block translations ≈ {string.Join(", ", farBlocks)}");
+    }
+
     private IReadOnlyList<TransformData> ComputeGeometryTransforms()
     {
         var runtimeTransforms = new Dictionary<int, TransformData>();
@@ -282,6 +365,7 @@ public sealed class AnimatedNifSceneObject : ISceneObject
             TraverseNode(nodeIndex, TransformData.Identity, runtimeTransforms, visited);
         }
 
+        _debugRuntimeTransforms = runtimeTransforms;
         var transforms = new List<TransformData>(_scene.GeometryBlocks.Count);
         foreach (var block in _scene.GeometryBlocks)
         {
@@ -296,6 +380,45 @@ public sealed class AnimatedNifSceneObject : ISceneObject
         }
 
         return transforms;
+    }
+
+    private static (List<TransformData> centered, Vector3 center) CenterGeometryTransforms(IReadOnlyList<TransformData> transforms)
+    {
+        var centered = new List<TransformData>(transforms.Count);
+        if (transforms.Count == 0)
+            return (centered, Vector3.Zero);
+
+        Vector3 accumulated = Vector3.Zero;
+        foreach (var transform in transforms)
+            accumulated += transform.Translation;
+
+        Vector3 center = accumulated / transforms.Count;
+        foreach (var transform in transforms)
+        {
+            var adjusted = new TransformData(transform.Translation - center, transform.Rotation, transform.Scale);
+            centered.Add(adjusted);
+        }
+
+        return (centered, center);
+    }
+
+    private void DrawDebugMarkers(Shader shader, IReadOnlyList<TransformData> geometryTransforms, Vector3 center, Matrix4 baseModel)
+    {
+        if (geometryTransforms.Count == 0)
+            return;
+
+        foreach (var transform in geometryTransforms)
+        {
+            Vector3 offset = transform.Translation - center;
+            Matrix4 placement = Matrix4.CreateTranslation(offset) * Matrix4.CreateScale(MarkerScale);
+            Matrix4 markerTransform = baseModel * placement;
+            _debugMarker.Draw(shader, null, markerTransform);
+        }
+    }
+
+    private static string FormatVector3(Vector3 vector)
+    {
+        return $"({vector.X:F2},{vector.Y:F2},{vector.Z:F2})";
     }
 
     private void TraverseNode(int nodeIndex, TransformData parentWorld, Dictionary<int, TransformData> output, HashSet<int> visited)

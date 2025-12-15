@@ -2,6 +2,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,14 @@ class RenderWindow : GameWindow
     private readonly string? _nifPath;
     private readonly string? _animationPath;
     private readonly bool _bakeTransforms = true;
+    private float _cameraYaw = MathF.PI / 4f;
+    private float _cameraPitch = -0.2f;
+    private float _cameraDistance = 20f;
+    private const float MinCameraDistance = 0.5f;
+    private const float MaxCameraDistance = 200f;
+    private const float CameraRotateSpeed = 1.3f;
+    private const float CameraZoomSpeed = 10.0f;
+    private readonly bool _verboseLogging = false;
 
     // Scene objects (meshes, debug helpers, etc.) rendered each frame.
     private List<ISceneObject> _sceneObjects = new List<ISceneObject>();
@@ -24,7 +33,7 @@ class RenderWindow : GameWindow
     {
     }
 
-    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, bool bakeTransforms, string? nifPath = null, string? animationPath = null)
+    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, bool bakeTransforms, string? nifPath = null, string? animationPath = null, bool verboseLogging = false)
         : base(gws, nws)
     {
         _forceCube = forceCube;
@@ -32,6 +41,7 @@ class RenderWindow : GameWindow
         _nifPath = nifPath;
         _animationPath = animationPath;
         _bakeTransforms = bakeTransforms;
+        _verboseLogging = verboseLogging;
     }
 
     protected override void OnLoad()
@@ -84,6 +94,35 @@ class RenderWindow : GameWindow
         _sceneObjects.Add(new DebugCube());
     }
 
+    protected override void OnUpdateFrame(FrameEventArgs args)
+    {
+        base.OnUpdateFrame(args);
+
+        float delta = (float)args.Time;
+        if (delta <= 0f)
+            return;
+
+        var keyboard = KeyboardState;
+        if (keyboard.IsKeyDown(Keys.Left))
+            _cameraYaw -= CameraRotateSpeed * delta;
+        if (keyboard.IsKeyDown(Keys.Right))
+            _cameraYaw += CameraRotateSpeed * delta;
+        if (keyboard.IsKeyDown(Keys.Up))
+            _cameraPitch = Clamp(_cameraPitch + CameraRotateSpeed * delta, -MathF.PI / 2f + 0.1f, MathF.PI / 2f - 0.1f);
+        if (keyboard.IsKeyDown(Keys.Down))
+            _cameraPitch = Clamp(_cameraPitch - CameraRotateSpeed * delta, -MathF.PI / 2f + 0.1f, MathF.PI / 2f - 0.1f);
+        if (keyboard.IsKeyDown(Keys.PageUp))
+            _cameraDistance = Clamp(_cameraDistance - CameraZoomSpeed * delta, MinCameraDistance, MaxCameraDistance);
+        if (keyboard.IsKeyDown(Keys.PageDown))
+            _cameraDistance = Clamp(_cameraDistance + CameraZoomSpeed * delta, MinCameraDistance, MaxCameraDistance);
+        if (keyboard.IsKeyPressed(Keys.R))
+        {
+            _cameraYaw = MathF.PI / 4f;
+            _cameraPitch = -0.2f;
+            _cameraDistance = 5f;
+        }
+    }
+
     protected override void OnRenderFrame(FrameEventArgs args)
     {
         base.OnRenderFrame(args);
@@ -91,14 +130,13 @@ class RenderWindow : GameWindow
         // Update scene and draw.
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-        Matrix4 view =
-            Matrix4.CreateTranslation(0f, 0f, -3f);
+        Matrix4 view = BuildCameraView();
 
         Matrix4 proj =
             Matrix4.CreatePerspectiveFieldOfView(
                 MathHelper.DegreesToRadians(45f),
                 Size.X / (float)Size.Y,
-                0.1f, 100f
+                0.01f, 400f
             );
 
         // Shared shader state
@@ -126,6 +164,12 @@ class RenderWindow : GameWindow
         GL.Viewport(0, 0, Size.X, Size.Y);
     }
 
+    protected override void OnMouseWheel(MouseWheelEventArgs e)
+    {
+        base.OnMouseWheel(e);
+        _cameraDistance = Clamp(_cameraDistance - e.OffsetY * CameraZoomSpeed, MinCameraDistance, MaxCameraDistance);
+    }
+
     protected override void OnUnload()
     {
         base.OnUnload();
@@ -137,7 +181,7 @@ class RenderWindow : GameWindow
     {
         try
         {
-            var obj = AnimatedNifSceneObject.Load(path, _bakeTransforms, animationPath);
+            var obj = AnimatedNifSceneObject.Load(path, _bakeTransforms, animationPath, _verboseLogging);
             _sceneObjects.Add(obj);
             return true;
         }
@@ -146,5 +190,27 @@ class RenderWindow : GameWindow
             Console.WriteLine($"[WARN] Failed to load animated NIF model \"{path}\": {ex.Message}");
             return false;
         }
+    }
+
+    private Matrix4 BuildCameraView()
+    {
+        float cosPitch = MathF.Cos(_cameraPitch);
+        float sinPitch = MathF.Sin(_cameraPitch);
+        float sinYaw = MathF.Sin(_cameraYaw);
+        float cosYaw = MathF.Cos(_cameraYaw);
+
+        var cameraPosition = new Vector3(
+            _cameraDistance * cosPitch * sinYaw,
+            _cameraDistance * sinPitch,
+            _cameraDistance * cosPitch * cosYaw);
+
+        return Matrix4.LookAt(cameraPosition, Vector3.Zero, Vector3.UnitY);
+    }
+
+    private static float Clamp(float value, float min, float max)
+    {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 }

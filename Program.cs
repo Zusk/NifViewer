@@ -12,6 +12,7 @@ class Program
         bool forceModel = true;
         string? nifPath = null;
         string? animationPath = null;
+        bool verboseAnimation = false;
         bool loadOnly = false;
         bool bakeTransforms = true;
 
@@ -43,6 +44,9 @@ class Program
                         forceCube = false;
                     }
                     break;
+                case "--verbose-anim":
+                    verboseAnimation = true;
+                    break;
                 case "--load-only":
                     loadOnly = true;
                     forceModel = true;
@@ -73,7 +77,7 @@ class Program
             Flags = ContextFlags.ForwardCompatible
         };
 
-        using var window = new RenderWindow(gws, nws, forceCube, forceModel, bakeTransforms, nifPath, animationPath);
+        using var window = new RenderWindow(gws, nws, forceCube, forceModel, bakeTransforms, nifPath, animationPath, verboseAnimation);
         window.Run();
     }
 

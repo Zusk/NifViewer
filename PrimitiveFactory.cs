@@ -5,6 +5,42 @@ public static class PrimitiveFactory
     // Factory for a simple cube model used for testing/debugging.
     public static Model CreateTestCubeModel()
     {
+        var (vertices, indices) = BuildCubeGeometry();
+        var mesh = new Mesh(vertices, indices);
+
+        var mat = new Material
+        {
+            Diffuse  = new Vector3(1f, 1f, 1f),
+            Specular = new Vector3(1f, 1f, 1f),
+            Shininess = 32f
+        };
+
+        mat.Texture = Texture.Load("Content/texture.dds", "Content/texture.png");
+
+        var model = new Model();
+        model.AddMesh(mesh, mat);
+        return model;
+    }
+
+    public static Model CreateMarkerCubeModel()
+    {
+        var (vertices, indices) = BuildCubeGeometry();
+        var mesh = new Mesh(vertices, indices);
+
+        var mat = new Material
+        {
+            Diffuse = new Vector3(1f, 0.2f, 0.2f),
+            Specular = new Vector3(0.3f, 0.3f, 0.3f),
+            Shininess = 8f
+        };
+
+        var model = new Model();
+        model.AddMesh(mesh, mat);
+        return model;
+    }
+
+    private static (float[] vertices, uint[] indices) BuildCubeGeometry()
+    {
         float[] vertices =
         {
             // FRONT (+Z)
@@ -54,22 +90,6 @@ public static class PrimitiveFactory
             20,21,22,22,23,20
         };
 
-        var mesh = new Mesh(vertices, indices);
-
-        var mat = new Material
-        {
-            // Simple white material; texture will dominate.
-            Diffuse  = new Vector3(1f, 1f, 1f),
-            Specular = new Vector3(1f, 1f, 1f),
-            Shininess = 32f
-        };
-
-        // Try using the same texture in both DDS and PNG formats.
-        // If missing, you can adjust or create a dummy material later.
-        mat.Texture = Texture.Load("Content/texture.dds", "Content/texture.png");
-
-        var model = new Model();
-        model.AddMesh(mesh, mat);
-        return model;
+        return (vertices, indices);
     }
 }
