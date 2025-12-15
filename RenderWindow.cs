@@ -13,6 +13,7 @@ class RenderWindow : GameWindow
     private bool _forceCube = false;
     private bool _forceModel = false;
     private readonly string? _nifPath;
+    private readonly string? _animationPath;
     private readonly bool _bakeTransforms = true;
 
     // Scene objects (meshes, debug helpers, etc.) rendered each frame.
@@ -23,12 +24,13 @@ class RenderWindow : GameWindow
     {
     }
 
-    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, bool bakeTransforms, string? nifPath = null)
+    public RenderWindow(GameWindowSettings gws, NativeWindowSettings nws, bool forceCube, bool forceModel, bool bakeTransforms, string? nifPath = null, string? animationPath = null)
         : base(gws, nws)
     {
         _forceCube = forceCube;
         _forceModel = forceModel;
         _nifPath = nifPath;
+        _animationPath = animationPath;
         _bakeTransforms = bakeTransforms;
     }
 
@@ -73,7 +75,7 @@ class RenderWindow : GameWindow
         if (_forceModel)
         {
             string desiredPath = _nifPath ?? Path.Combine(AppContext.BaseDirectory, "Content", "Svart_Monk.nif");
-            if (TryAddNifModel(desiredPath))
+            if (TryAddNifModel(desiredPath, _animationPath))
                 return;
 
             Console.WriteLine("[INFO] Falling back to debug cube because the model could not be loaded.");
@@ -131,17 +133,17 @@ class RenderWindow : GameWindow
             obj.Dispose();
     }
 
-    private bool TryAddNifModel(string path)
+    private bool TryAddNifModel(string path, string? animationPath)
     {
         try
         {
-            var obj = NifModelSceneObject.Load(path, _bakeTransforms);
+            var obj = AnimatedNifSceneObject.Load(path, _bakeTransforms, animationPath);
             _sceneObjects.Add(obj);
             return true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[WARN] Failed to load NIF model \"{path}\": {ex.Message}");
+            Console.WriteLine($"[WARN] Failed to load animated NIF model \"{path}\": {ex.Message}");
             return false;
         }
     }

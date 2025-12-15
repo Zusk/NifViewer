@@ -11,21 +11,35 @@ public sealed class Civ4NifLoader
 {
     private static readonly bool TraceBlocks = Environment.GetEnvironmentVariable("NIF_TRACE_BLOCKS") == "1";
 
-    public Model LoadModel(string path, bool createGpuMeshes = true, bool bakeTransforms = true)
-    {
-        if (!File.Exists(path))
-            throw new FileNotFoundException("NIF file not found.", path);
+public NifScene LoadModel(string path, bool createGpuMeshes = true, bool bakeTransforms = true)
+{
+    if (!File.Exists(path))
+        throw new FileNotFoundException("NIF file not found.", path);
 
         var context = ParseFile(path);
         string contentDir = Path.GetDirectoryName(path) ?? string.Empty;
-        return BuildModel(context, contentDir, createGpuMeshes, bakeTransforms);
+        var worldTransforms = BuildWorldTransforms(context);
+        var nodes = BuildNodeInfos(context, worldTransforms);
+        var skinInstances = BuildSkinInstances(context);
+        var buildResult = BuildModel(context, contentDir, createGpuMeshes, bakeTransforms, worldTransforms);
+        return new NifScene(
+            buildResult.Model,
+            context,
+            worldTransforms,
+            buildResult.GeometryBlocks,
+            nodes,
+            skinInstances);
     }
 
-    private static Model BuildModel(NifContext context, string contentDir, bool createGpuMeshes, bool bakeTransforms)
+    private static ModelBuildResult BuildModel(
+        NifContext context,
+        string contentDir,
+        bool createGpuMeshes,
+        bool bakeTransforms,
+        Dictionary<int, TransformData> worldTransforms)
     {
         var model = new Model();
-        bool addedMesh = false;
-        Dictionary<int, TransformData>? worldTransforms = bakeTransforms ? BuildWorldTransforms(context) : null;
+        var geometryBlocks = new List<GeometryBlockInfo>();
 
         for (int i = 0; i < context.Blocks.Length; i++)
         {
@@ -33,8 +47,12 @@ public sealed class Civ4NifLoader
             Vector3[] normals;
             Vector2[][] uvSets;
             Triangle[] triangles;
-            TransformData transform;
             List<int> propertyRefs;
+            GeometryType geometryType;
+            int dataRef;
+            int skinInstanceRef;
+            int controllerRef;
+            TransformData localTransform;
 
             switch (context.Blocks[i])
             {
@@ -47,10 +65,12 @@ public sealed class Civ4NifLoader
                     normals = meshData.Normals;
                     uvSets = meshData.UVSets;
                     triangles = meshData.Triangles;
-                    transform = bakeTransforms && worldTransforms != null && worldTransforms.TryGetValue(i, out var triTransform)
-                        ? triTransform
-                        : TransformData.Identity;
                     propertyRefs = tri.Properties;
+                    dataRef = tri.DataRef;
+                    skinInstanceRef = tri.SkinInstanceRef;
+                    controllerRef = tri.ControllerRef;
+                    geometryType = GeometryType.NiTriShape;
+                    localTransform = TransformData.FromComponents(tri.Translation, tri.Rotation, tri.Scale);
                     break;
 
                 case NiTriStripsBlock strips:
@@ -65,32 +85,134 @@ public sealed class Civ4NifLoader
                     if (triangles.Length == 0)
                         continue;
 
-                    transform = bakeTransforms && worldTransforms != null && worldTransforms.TryGetValue(i, out var stripTransform)
-                        ? stripTransform
-                        : TransformData.Identity;
                     propertyRefs = strips.Properties;
+                    dataRef = strips.DataRef;
+                    skinInstanceRef = strips.SkinInstanceRef;
+                    controllerRef = strips.ControllerRef;
+                    geometryType = GeometryType.NiTriStrips;
+                    localTransform = TransformData.FromComponents(strips.Translation, strips.Rotation, strips.Scale);
                     break;
 
                 default:
                     continue;
             }
 
+            TransformData worldTransform = worldTransforms.TryGetValue(i, out var resolved)
+                ? resolved
+                : TransformData.Identity;
+
+            var geometryInfo = new GeometryBlockInfo(
+                i,
+                geometryType,
+                dataRef,
+                localTransform,
+                worldTransform,
+                skinInstanceRef,
+                controllerRef);
+
             if (!createGpuMeshes)
             {
-                addedMesh = true;
+                geometryBlocks.Add(geometryInfo);
                 continue;
             }
 
-            Mesh mesh = BuildMesh(vertices, normals, uvSets, triangles, transform, bakeTransforms);
+            TransformData bakeTransform = bakeTransforms ? worldTransform : TransformData.Identity;
+            Mesh mesh = BuildMesh(vertices, normals, uvSets, triangles, bakeTransform, bakeTransforms);
             Material mat = BuildMaterial(context, propertyRefs, contentDir);
             model.AddMesh(mesh, mat);
-            addedMesh = true;
+            geometryBlocks.Add(geometryInfo);
         }
 
-        if (!addedMesh)
+        if (geometryBlocks.Count == 0)
             throw new InvalidOperationException("The NIF file did not contain any drawable NiTriShape blocks.");
 
-        return model;
+        return new ModelBuildResult(model, geometryBlocks);
+    }
+
+    private readonly struct ModelBuildResult
+    {
+        public ModelBuildResult(Model model, List<GeometryBlockInfo> geometryBlocks)
+        {
+            Model = model;
+            GeometryBlocks = geometryBlocks;
+        }
+
+        public Model Model { get; }
+        public List<GeometryBlockInfo> GeometryBlocks { get; }
+    }
+
+    private static List<NodeInfo> BuildNodeInfos(NifContext context, Dictionary<int, TransformData> worldTransforms)
+    {
+        var nodes = new List<NodeInfo>();
+        for (int i = 0; i < context.Blocks.Length; i++)
+        {
+            if (context.Blocks[i] is not NiNodeBlock node)
+                continue;
+
+            TransformData worldTransform = worldTransforms.TryGetValue(i, out var resolved)
+                ? resolved
+                : TransformData.Identity;
+            var localTransform = TransformData.FromComponents(node.Translation, node.Rotation, node.Scale);
+            nodes.Add(new NodeInfo(
+                i,
+                node.Name,
+                localTransform,
+                worldTransform,
+                new List<int>(node.Children),
+                node.ControllerRef));
+        }
+
+        return nodes;
+    }
+
+    private static List<SkinInstanceInfo> BuildSkinInstances(NifContext context)
+    {
+        var skinInstances = new List<SkinInstanceInfo>();
+        for (int i = 0; i < context.Blocks.Length; i++)
+        {
+            if (context.Blocks[i] is not NiSkinInstanceBlock instance)
+                continue;
+
+            var skinData = context.GetBlock<NiSkinDataBlock>(instance.DataRef);
+            var skinBones = BuildSkinBones(skinData);
+            skinInstances.Add(new SkinInstanceInfo(
+                i,
+                instance.DataRef,
+                instance.SkinPartitionRef,
+                instance.SkeletonRootRef,
+                new List<int>(instance.Bones),
+                skinBones));
+        }
+
+        return skinInstances;
+    }
+
+    private static List<SkinBoneInfo> BuildSkinBones(NiSkinDataBlock? data)
+    {
+        var bones = new List<SkinBoneInfo>();
+        if (data == null)
+            return bones;
+
+        foreach (var bone in data.Bones)
+        {
+            var transform = TransformData.FromComponents(bone.SkinTranslation, bone.SkinRotation, bone.SkinScale);
+            var weights = BuildSkinWeights(bone.VertexWeights);
+            bones.Add(new SkinBoneInfo(transform, bone.BoundingSphereCenter, bone.BoundingSphereRadius, weights));
+        }
+
+        return bones;
+    }
+
+    private static List<VertexWeightInfo> BuildSkinWeights(List<VertexWeight>? weights)
+    {
+        var result = new List<VertexWeightInfo>();
+        if (weights == null)
+            return result;
+
+        foreach (var weight in weights)
+            result.Add(new VertexWeightInfo(weight.Index, weight.Weight));
+
+        return result;
     }
 
     private static Dictionary<int, TransformData> BuildWorldTransforms(NifContext context)
@@ -1231,71 +1353,6 @@ public sealed class Civ4NifLoader
             m11, m12,
             m21, m22
         );
-    }
-
-    private readonly struct TransformData
-    {
-        public TransformData(Vector3 translation, Matrix3 rotation, float scale)
-        {
-            Translation = translation;
-            Rotation = rotation;
-            Scale = scale;
-        }
-
-        public Vector3 Translation { get; }
-        public Matrix3 Rotation { get; }
-        public float Scale { get; }
-
-        public static TransformData Identity { get; } = new(Vector3.Zero, Matrix3.Identity, 1f);
-
-        public static TransformData FromComponents(Vector3 translation, Matrix3 rotation, float scale) =>
-            new(translation, rotation, scale);
-
-        public static TransformData Combine(in TransformData parent, in TransformData local)
-        {
-            float combinedScale = parent.Scale * local.Scale;
-            Matrix3 combinedRotation = Multiply(parent.Rotation, local.Rotation);
-            Vector3 translatedChild = Multiply(parent.Rotation, local.Translation * parent.Scale);
-            Vector3 combinedTranslation = translatedChild + parent.Translation;
-            return new TransformData(combinedTranslation, combinedRotation, combinedScale);
-        }
-
-        public Vector3 TransformPosition(Vector3 localPosition)
-        {
-            Vector3 scaled = localPosition * Scale;
-            Vector3 rotated = Multiply(Rotation, scaled);
-            return rotated + Translation;
-        }
-
-        public Vector3 TransformNormal(Vector3 normal)
-        {
-            Vector3 rotated = Multiply(Rotation, normal);
-            return rotated.LengthSquared > 0f ? Vector3.Normalize(rotated) : rotated;
-        }
-
-        private static Matrix3 Multiply(Matrix3 left, Matrix3 right)
-        {
-            return new Matrix3(
-                left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31,
-                left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32,
-                left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33,
-                left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31,
-                left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32,
-                left.M21 * right.M13 + left.M22 * right.M23 + left.M23 * right.M33,
-                left.M31 * right.M11 + left.M32 * right.M21 + left.M33 * right.M31,
-                left.M31 * right.M12 + left.M32 * right.M22 + left.M33 * right.M32,
-                left.M31 * right.M13 + left.M32 * right.M23 + left.M33 * right.M33
-            );
-        }
-
-        private static Vector3 Multiply(Matrix3 matrix, Vector3 vector)
-        {
-            return new Vector3(
-                matrix.M11 * vector.X + matrix.M12 * vector.Y + matrix.M13 * vector.Z,
-                matrix.M21 * vector.X + matrix.M22 * vector.Y + matrix.M23 * vector.Z,
-                matrix.M31 * vector.X + matrix.M32 * vector.Y + matrix.M33 * vector.Z
-            );
-        }
     }
 
     private sealed class GeneralInfo

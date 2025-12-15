@@ -11,6 +11,7 @@ class Program
         bool forceCube = false;
         bool forceModel = true;
         string? nifPath = null;
+        string? animationPath = null;
         bool loadOnly = false;
         bool bakeTransforms = true;
 
@@ -30,6 +31,14 @@ class Program
                     if (i + 1 < args.Length)
                     {
                         nifPath = args[++i];
+                        forceModel = true;
+                        forceCube = false;
+                    }
+                    break;
+                case "--kf":
+                    if (i + 1 < args.Length)
+                    {
+                        animationPath = args[++i];
                         forceModel = true;
                         forceCube = false;
                     }
@@ -64,7 +73,7 @@ class Program
             Flags = ContextFlags.ForwardCompatible
         };
 
-        using var window = new RenderWindow(gws, nws, forceCube, forceModel, bakeTransforms, nifPath);
+        using var window = new RenderWindow(gws, nws, forceCube, forceModel, bakeTransforms, nifPath, animationPath);
         window.Run();
     }
 

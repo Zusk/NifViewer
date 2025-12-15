@@ -21,9 +21,9 @@ public sealed class NifModelSceneObject : ISceneObject
     {
         string resolvedPath = ResolvePath(nifPath);
         var loader = new Civ4NifLoader();
-        var model = loader.LoadModel(resolvedPath, bakeTransforms: bakeTransforms);
-        Console.WriteLine($"[INFO] Loaded NIF model \"{Path.GetFileName(resolvedPath)}\" ({model.Meshes.Count} mesh(es))");
-        return new NifModelSceneObject(model);
+        var scene = loader.LoadModel(resolvedPath, bakeTransforms: bakeTransforms);
+        Console.WriteLine($"[INFO] Loaded NIF model \"{Path.GetFileName(resolvedPath)}\" ({scene.Model.Meshes.Count} mesh(es))");
+        return new NifModelSceneObject(scene.Model);
     }
 
     public void Update(float deltaTime)
