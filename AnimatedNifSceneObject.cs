@@ -25,6 +25,7 @@ public sealed class AnimatedNifSceneObject : ISceneObject
     private Dictionary<int, TransformData>? _debugRuntimeTransforms;
     private const float VerboseIntervalSeconds = 1f;
     private const float MarkerScale = 0.2f;
+    private const float GeometryScaleBoost = 6f;
 
     private AnimatedNifSceneObject(NifScene scene, string modelDirectory, bool verboseLogging)
     {
@@ -73,16 +74,16 @@ public sealed class AnimatedNifSceneObject : ISceneObject
 
     public void Render(Shader shader, Matrix4 view, Matrix4 proj)
     {
-        Matrix4 baseModel =
-            Matrix4.CreateRotationY(_elapsedTime * 0.2f) *
-            Matrix4.CreateScale(_autoScale);
-
         shader.Use();
         shader.SetMatrix4("uView", ref view);
         shader.SetMatrix4("uProj", ref proj);
 
         var blockTransforms = ComputeGeometryTransforms();
         var (centeredTransforms, geometryCenter) = CenterGeometryTransforms(blockTransforms);
+
+        Matrix4 baseModel =
+            Matrix4.CreateRotationY(_elapsedTime * 0.2f) *
+            Matrix4.CreateScale(_autoScale * GeometryScaleBoost);
         if (_verboseLogging && _verboseTimer >= VerboseIntervalSeconds)
         {
             LogVerbose(blockTransforms, geometryCenter);
@@ -382,17 +383,14 @@ public sealed class AnimatedNifSceneObject : ISceneObject
         return transforms;
     }
 
-    private static (List<TransformData> centered, Vector3 center) CenterGeometryTransforms(IReadOnlyList<TransformData> transforms)
+    private (List<TransformData> centered, Vector3 center) CenterGeometryTransforms(IReadOnlyList<TransformData> transforms)
     {
-        var centered = new List<TransformData>(transforms.Count);
         if (transforms.Count == 0)
-            return (centered, Vector3.Zero);
+            return (new List<TransformData>(), Vector3.Zero);
 
-        Vector3 accumulated = Vector3.Zero;
-        foreach (var transform in transforms)
-            accumulated += transform.Translation;
+        Vector3 center = DetermineSceneOrigin(transforms);
+        var centered = new List<TransformData>(transforms.Count);
 
-        Vector3 center = accumulated / transforms.Count;
         foreach (var transform in transforms)
         {
             var adjusted = new TransformData(transform.Translation - center, transform.Rotation, transform.Scale);
@@ -400,6 +398,28 @@ public sealed class AnimatedNifSceneObject : ISceneObject
         }
 
         return (centered, center);
+    }
+
+    private Vector3 DetermineSceneOrigin(IReadOnlyList<TransformData> transforms)
+    {
+        foreach (var skin in _scene.SkinInstances)
+        {
+            if (_nodeLookup.TryGetValue(skin.SkeletonRootRef, out var rootNode))
+                return rootNode.WorldTransform.Translation;
+        }
+
+        var preferred = _nodeLookup.Values.FirstOrDefault(node => string.Equals(node.Name, "MD NonAccum", StringComparison.OrdinalIgnoreCase));
+        if (preferred != null)
+            return preferred.WorldTransform.Translation;
+
+        var root = _nodeLookup.Values.FirstOrDefault(node => !_nodeParents.ContainsKey(node.BlockIndex));
+        if (root != null)
+            return root.WorldTransform.Translation;
+
+        if (transforms.Count > 0)
+            return transforms[0].Translation;
+
+        return Vector3.Zero;
     }
 
     private void DrawDebugMarkers(Shader shader, IReadOnlyList<TransformData> geometryTransforms, Vector3 center, Matrix4 baseModel)
